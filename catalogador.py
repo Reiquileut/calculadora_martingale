@@ -6,7 +6,7 @@ import pytz
 
 # Inicializa o MetaTrader 5
 if not mt5.initialize():
-    print("Falha ao inicializar")
+    print("Falha ao inicializar o MetaTrader 5")
     mt5.shutdown()
 
 # Define o ativo e o timeframe
@@ -61,6 +61,7 @@ previous_losses = 0
 desired_profit = initial_bet
 current_operation = 'C'  # Começa com 'C' (compra)
 results = []
+loss_times = []  # Lista para armazenar os horários dos prejuízos
 
 i = 0
 while i < len(data):
@@ -85,7 +86,8 @@ while i < len(data):
             'profit': profit,
             'martingale_level': martingale_level,
             'total_gains': total_gains,
-            'total_losses': total_losses
+            'total_losses': total_losses,
+            'final_result': 'Gain'
         })
 
         # Reseta as variáveis para a próxima operação
@@ -122,8 +124,12 @@ while i < len(data):
                 'profit': profit,
                 'martingale_level': martingale_level,
                 'total_gains': total_gains,
-                'total_losses': total_losses
+                'total_losses': total_losses,
+                'final_result': 'Loss'
             })
+
+            # Registra o horário em que o prejuízo ocorreu
+            loss_times.append(row['time'])
 
             # Reseta as variáveis para a próxima operação
             martingale_level = 0
@@ -151,7 +157,8 @@ while i < len(data):
                 'profit': -bet_amount,
                 'martingale_level': martingale_level,
                 'total_gains': total_gains,
-                'total_losses': total_losses
+                'total_losses': total_losses,
+                'final_result': 'In Martingale'
             })
 
             i += 1  # Continua para o próximo candle no martingale
@@ -163,5 +170,13 @@ results_df = pd.DataFrame(results)
 print(f"Total de Gains: {total_gains}")
 print(f"Total de Losses: {total_losses}")
 
-# Exibe as operações realizadas
-print(results_df[['time', 'operation', 'bet_amount', 'profit', 'martingale_level']])
+# Exibe os horários dos prejuízos
+if loss_times:
+    print("\nHorários em que ocorreram prejuízos após o último martingale:")
+    for loss_time in loss_times:
+        print(loss_time)
+else:
+    print("\nNão ocorreram prejuízos após o último martingale.")
+
+# Opcionalmente, exibe as operações realizadas
+# print(results_df[['time', 'operation', 'bet_amount', 'profit', 'martingale_level', 'final_result']])
