@@ -3,7 +3,6 @@ import pandas as pd
 import numpy as np
 from datetime import datetime, timedelta
 import pytz
-import matplotlib.pyplot as plt
 
 # Inicializa o MetaTrader 5
 if not mt5.initialize():
@@ -38,13 +37,6 @@ data['time'] = pd.to_datetime(data['time'], unit='s')
 # Fecha a conexão com o MetaTrader 5
 mt5.shutdown()
 
-# Sequências de operações
-sequence_buy = ['C', 'C', 'V', 'C', 'V', 'V', 'C', 'C']
-sequence_sell = ['V', 'V', 'C', 'V', 'C', 'C', 'V', 'V']
-
-# Escolha a sequência que deseja testar
-sequence = sequence_buy  # ou sequence_sell
-
 # Parâmetros
 payout_percentage = 80  # Porcentagem de payout
 payout_rate = payout_percentage / 100
@@ -55,71 +47,107 @@ max_martingale = 8  # Número máximo de martingales
 def is_gain(operation, open_price, close_price):
     if operation == 'C':
         return close_price > open_price
-    elif operation == 'V':
-        return close_price < open_price
     else:
         return False
 
 # Variáveis de controle
-results = []
-bet_amount = initial_bet
-martingale_level = 0
 total_gains = 0
 total_losses = 0
-sequence_index = 0
+martingale_level = 0
+bet_amount = initial_bet
+previous_losses = 0
+desired_profit = initial_bet
 
-for index, row in data.iterrows():
-    if martingale_level >= max_martingale:
-        # Reseta após atingir o máximo de martingales
-        martingale_level = 0
-        bet_amount = initial_bet
-        sequence_index = 0
+results = []
 
-    operation = sequence[sequence_index % len(sequence)]
+i = 0
+while i < len(data):
+    row = data.iloc[i]
+    operation = 'C'
     open_price = row['open']
     close_price = row['close']
 
     gain = is_gain(operation, open_price, close_price)
 
     if gain:
-        profit = bet_amount * payout_rate
+        # Calcula o lucro
+        profit = bet_amount * payout_rate - previous_losses - bet_amount
         total_gains += 1
         martingale_level = 0
         bet_amount = initial_bet
-        sequence_index = 0  # Reinicia a sequência após gain
-    else:
-        profit = -bet_amount
-        total_losses += 1
-        martingale_level += 1
-        bet_amount *= 2  # Aplica o martingale
-        sequence_index += 1  # Avança na sequência
+        previous_losses = 0
+        desired_profit = initial_bet
 
-    results.append({
-        'time': row['time'],
-        'operation': operation,
-        'open': open_price,
-        'close': close_price,
-        'bet_amount': bet_amount,
-        'profit': profit,
-        'total_gains': total_gains,
-        'total_losses': total_losses
-    })
+        # Armazena o resultado
+        results.append({
+            'time': row['time'],
+            'operation': operation,
+            'open': open_price,
+            'close': close_price,
+            'bet_amount': bet_amount,
+            'profit': profit,
+            'martingale_level': martingale_level,
+            'total_gains': total_gains,
+            'total_losses': total_losses
+        })
+
+        i += 1  # Move para o próximo candle
+
+    else:
+        # Ocorreu um loss
+        previous_losses += bet_amount
+        martingale_level += 1
+
+        if martingale_level >= max_martingale:
+            # Considera como 1 loss
+            profit = -previous_losses
+            total_losses += 1
+            martingale_level = 0
+            bet_amount = initial_bet
+            previous_losses = 0
+            desired_profit = initial_bet
+
+            # Armazena o resultado
+            results.append({
+                'time': row['time'],
+                'operation': operation,
+                'open': open_price,
+                'close': close_price,
+                'bet_amount': bet_amount,
+                'profit': profit,
+                'martingale_level': martingale_level,
+                'total_gains': total_gains,
+                'total_losses': total_losses
+            })
+
+            i += 1  # Move para o próximo candle
+
+        else:
+            # Calcula o próximo valor da aposta usando o martingale
+            desired_profit = initial_bet
+            bet_amount = (previous_losses + desired_profit) / payout_rate
+
+            # Armazena o resultado
+            results.append({
+                'time': row['time'],
+                'operation': operation,
+                'open': open_price,
+                'close': close_price,
+                'bet_amount': bet_amount,
+                'profit': -bet_amount,
+                'martingale_level': martingale_level,
+                'total_gains': total_gains,
+                'total_losses': total_losses
+            })
+
+            i += 1  # Continua para o próximo candle no martingale
 
 # Converte os resultados para DataFrame
 results_df = pd.DataFrame(results)
 
-# Exibir resultados
+# Exibe os resultados
 print(f"Total de Gains: {total_gains}")
 print(f"Total de Losses: {total_losses}")
-print(f"Lucro Total: R$ {results_df['profit'].sum():.2f}")
 
-# Visualizar lucro acumulado
-results_df['cumulative_profit'] = results_df['profit'].cumsum()
-
-plt.figure(figsize=(12,6))
-plt.plot(results_df['time'], results_df['cumulative_profit'], marker='o')
-plt.title('Lucro Acumulado ao Longo do Dia')
-plt.xlabel('Tempo')
-plt.ylabel('Lucro Acumulado (R$)')
-plt.grid(True)
-plt.show()
+# Exibe as operações realizadas
+print(results_df[['time', 'operation', 'bet_amount', 'profit', 'martingale_level']])
