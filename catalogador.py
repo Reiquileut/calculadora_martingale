@@ -47,6 +47,8 @@ max_martingale = 8  # Número máximo de martingales
 def is_gain(operation, open_price, close_price):
     if operation == 'C':
         return close_price > open_price
+    elif operation == 'V':
+        return close_price < open_price
     else:
         return False
 
@@ -57,31 +59,26 @@ martingale_level = 0
 bet_amount = initial_bet
 previous_losses = 0
 desired_profit = initial_bet
-
+current_operation = 'C'  # Começa com 'C' (compra)
 results = []
 
 i = 0
 while i < len(data):
     row = data.iloc[i]
-    operation = 'C'
     open_price = row['open']
     close_price = row['close']
 
-    gain = is_gain(operation, open_price, close_price)
+    gain = is_gain(current_operation, open_price, close_price)
 
     if gain:
         # Calcula o lucro
         profit = bet_amount * payout_rate - previous_losses - bet_amount
         total_gains += 1
-        martingale_level = 0
-        bet_amount = initial_bet
-        previous_losses = 0
-        desired_profit = initial_bet
 
         # Armazena o resultado
         results.append({
             'time': row['time'],
-            'operation': operation,
+            'operation': current_operation,
             'open': open_price,
             'close': close_price,
             'bet_amount': bet_amount,
@@ -90,6 +87,18 @@ while i < len(data):
             'total_gains': total_gains,
             'total_losses': total_losses
         })
+
+        # Reseta as variáveis para a próxima operação
+        martingale_level = 0
+        bet_amount = initial_bet
+        previous_losses = 0
+        desired_profit = initial_bet
+
+        # Alterna o tipo de operação após um gain
+        if current_operation == 'C':
+            current_operation = 'V'
+        else:
+            current_operation = 'C'
 
         i += 1  # Move para o próximo candle
 
@@ -102,15 +111,11 @@ while i < len(data):
             # Considera como 1 loss
             profit = -previous_losses
             total_losses += 1
-            martingale_level = 0
-            bet_amount = initial_bet
-            previous_losses = 0
-            desired_profit = initial_bet
 
             # Armazena o resultado
             results.append({
                 'time': row['time'],
-                'operation': operation,
+                'operation': current_operation,
                 'open': open_price,
                 'close': close_price,
                 'bet_amount': bet_amount,
@@ -120,6 +125,15 @@ while i < len(data):
                 'total_losses': total_losses
             })
 
+            # Reseta as variáveis para a próxima operação
+            martingale_level = 0
+            bet_amount = initial_bet
+            previous_losses = 0
+            desired_profit = initial_bet
+
+            # Após um loss, mantém o mesmo tipo de operação
+            # Não alterna current_operation
+
             i += 1  # Move para o próximo candle
 
         else:
@@ -127,10 +141,10 @@ while i < len(data):
             desired_profit = initial_bet
             bet_amount = (previous_losses + desired_profit) / payout_rate
 
-            # Armazena o resultado
+            # Armazena o resultado parcial (opcional)
             results.append({
                 'time': row['time'],
-                'operation': operation,
+                'operation': current_operation,
                 'open': open_price,
                 'close': close_price,
                 'bet_amount': bet_amount,
