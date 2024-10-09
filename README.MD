@@ -151,10 +151,4 @@ Este projeto é licenciado sob os termos da licença MIT. Consulte o arquivo [LI
 
 ---
 
-## **Contato**
 
-Para dúvidas ou sugestões, entre em contato:
-
-- **Nome:** Seu Nome
-- **Email:** seuemail@exemplo.com
-- **GitHub:** [seu-usuario](https://github.com/seu-usuario)
