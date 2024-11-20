@@ -1,10 +1,14 @@
-# Calculadora de Martingale e Catalogador
+# **Calculadora de Martingale, Bot GUI e Catalogador**
 
-Este repositório contém dois programas em Python:
+Este repositório contém um conjunto de scripts Python para realizar operações financeiras utilizando a estratégia de Martingale, com suporte para análise de dados históricos, simulação, e execução automatizada de ordens.
 
-1. **Calculadora de Martingale**: Uma interface gráfica que ajuda a calcular a sequência de apostas e valores a serem apostados com base no payout da corretora e na estratégia de Martingale.
+## **Componentes**
 
-2. **Catalogador**: Um script que analisa os dados históricos de candles de 1 minuto do par EUR/USD e aplica a estratégia de Martingale, fornecendo estatísticas sobre ganhos e perdas ao longo do dia.
+1. **Bot GUI**: Uma interface gráfica para executar operações automatizadas com controle manual de ciclos.
+2. **Calculadora de Martingale**: Interface gráfica para calcular a sequência de apostas baseada no payout e estratégia de Martingale.
+3. **Catalogador**: Analisa dados históricos de candles para avaliar a eficácia da estratégia.
+4. **Get Ativos**: Lista ativos disponíveis para operação na IQ Option.
+5. **Bot IQ**: Script básico para conectar à IQ Option e realizar operações.
 
 ---
 
@@ -13,23 +17,23 @@ Este repositório contém dois programas em Python:
 - [Pré-requisitos](#pré-requisitos)
 - [Instalação](#instalação)
 - [Uso](#uso)
+  - [Bot GUI](#bot-gui)
   - [Calculadora de Martingale](#calculadora-de-martingale)
   - [Catalogador](#catalogador)
+  - [Get Ativos](#get-ativos)
 - [Observações Importantes](#observações-importantes)
 - [Licença](#licença)
-- [Contato](#contato)
 
 ---
 
 ## **Pré-requisitos**
 
-Antes de utilizar os programas, certifique-se de ter o seguinte instalado em seu sistema:
+Certifique-se de ter:
 
 - **Python 3.7 ou superior**
 - **MetaTrader 5** (para o uso do Catalogador)
-  - O MetaTrader 5 deve estar instalado e em execução.
-  - Você deve estar logado em uma conta que possua acesso ao par EUR/USD.
-- **Git** (opcional, para clonar o repositório)
+- **Conta na IQ Option** para execução de operações.
+- **Bibliotecas Python listadas no `requirements.txt`**
 
 ---
 
@@ -45,110 +49,85 @@ Antes de utilizar os programas, certifique-se de ter o seguinte instalado em seu
 2. **Crie um ambiente virtual (recomendado):**
 
     ```bash
-    # No Windows
     python -m venv venv
-    venv\Scripts\activate
-
-    # No macOS/Linux
-    python3 -m venv venv
-    source venv/bin/activate
+    source venv/bin/activate  # macOS/Linux
+    venv\Scripts\activate     # Windows
     ```
 
-3. **Atualize o `pip`:**
-
-    ```bash
-    pip install --upgrade pip
-    ```
-
-4. **Instale as dependências:**
+3. **Instale as dependências:**
 
     ```bash
     pip install -r requirements.txt
     ```
 
-    **Nota:** Devido a incompatibilidades, é importante que a versão do NumPy seja inferior a 2.0. O arquivo `requirements.txt` já especifica a versão correta.
-
 ---
 
 ## **Uso**
 
-### **Calculadora de Martingale**
+### **Bot GUI**
 
-1. **Navegue até o diretório da calculadora:**
+1. Execute o bot GUI:
 
     ```bash
-    cd calculadora_martingale
+    python bot-gui.py
     ```
 
-2. **Execute o script:**
+2. **Configurações na GUI:**
+
+   - **Ativo:** Insira o ativo desejado (ex.: "EURUSD").
+   - **Payout (%):** Payout da corretora (ex.: "80").
+   - **Valor Inicial:** Valor da primeira aposta.
+   - **Tipo de Conta:** Selecione entre Demo e Real.
+   - **Direção:** Escolha "Compra" ou "Venda".
+
+3. **Ciclo de Operações:**
+   - Clique em **Iniciar Ciclo** para começar a sequência.
+   - O ciclo será interrompido manualmente ao clicar em **Encerrar Ciclo** ou automaticamente ao atingir saldo insuficiente.
+
+4. **Fluxo Manual:**
+   - Quando um gain é atingido, o ciclo é parado manualmente.
+   - Para reiniciar, ajuste os parâmetros e clique novamente em **Iniciar Ciclo**.
+
+---
+
+### **Calculadora de Martingale**
+
+- Calcule valores e direções das apostas para maximizar o lucro com a interface gráfica:
 
     ```bash
     python calculadora_martingale.py
     ```
 
-3. **Utilize a interface gráfica:**
-
-    - **Payout (%):** Insira a porcentagem de payout da corretora (por exemplo, `80` para 80%).
-    - **Valor do Primeiro Aporte (R$):** Insira o valor da primeira aposta (mínimo de R$ 2).
-    - **Botões de Compra e Venda:**
-      - **Comprar (verde):** Clique para iniciar a sequência começando com compra.
-      - **Vender (vermelho):** Clique para iniciar a sequência começando com venda.
-    - **Resetar:** Limpa os campos e os resultados para uma nova simulação.
-
-4. **Resultados:**
-
-    - Após clicar em **Comprar** ou **Vender**, a calculadora exibirá visualmente a sequência de apostas e os valores a serem apostados em cada etapa, considerando o payout e a estratégia de Martingale.
+---
 
 ### **Catalogador**
 
-1. **Navegue até o diretório do catalogador:**
-
-    ```bash
-    cd catalogador
-    ```
-
-2. **Execute o script:**
+- Analise dados históricos para verificar a eficácia da estratégia:
 
     ```bash
     python catalogador.py
     ```
 
-3. **Descrição do Script:**
+---
 
-    - O script conecta-se ao MetaTrader 5 e obtém os dados de candles de 1 minuto do par EUR/USD desde o início do dia.
-    - Aplica a estratégia de Martingale alternando entre operações de compra e venda após cada gain.
-    - Exibe o total de gains e losses, além dos horários em que ocorreram prejuízos após atingir o nível máximo de Martingale.
+### **Get Ativos**
 
-4. **Parâmetros Personalizáveis:**
+- Liste os ativos disponíveis para operação:
 
-    - **payout_percentage:** Porcentagem de payout (padrão: `80`).
-    - **initial_bet:** Valor inicial da aposta (padrão: `2`).
-    - **max_martingale:** Número máximo de níveis de Martingale (padrão: `8`).
-
-    Você pode ajustar esses parâmetros diretamente no código, se necessário.
+    ```bash
+    python get-ativos.py
+    ```
 
 ---
 
 ## **Observações Importantes**
 
-- **MetaTrader 5:**
-  - O MetaTrader 5 deve estar aberto e conectado a uma conta válida para que o catalogador funcione corretamente.
-  - Certifique-se de que o par EUR/USD está disponível e possui dados históricos suficientes.
-
-- **Estratégia de Martingale:**
-  - O uso do Martingale pode levar a perdas significativas. Esteja ciente dos riscos envolvidos.
-  - Este programa é fornecido para fins educacionais e não constitui aconselhamento financeiro.
-
-- **Compatibilidade do NumPy:**
-  - Devido a incompatibilidades entre o MetaTrader 5 e versões mais recentes do NumPy, é necessário usar uma versão do NumPy inferior a `2.0`.
-  - O arquivo `requirements.txt` especifica a versão adequada.
+- **Uso Responsável**: O Martingale pode levar a perdas significativas.
+- **MetaTrader 5**: O catalogador requer o MetaTrader 5 configurado corretamente.
+- **Controle Manual**: O bot GUI permite parar e reiniciar o ciclo conforme necessário, proporcionando maior controle.
 
 ---
 
 ## **Licença**
 
-Este projeto é licenciado sob os termos da licença MIT. Consulte o arquivo [LICENSE](LICENSE) para obter mais informações.
-
----
-
-
+Este projeto é licenciado sob os termos da licença MIT. Consulte o arquivo LICENSE para mais detalhes.
