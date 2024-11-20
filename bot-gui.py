@@ -9,19 +9,26 @@ import time
 EMAIL = "thiagosoteroprado@gmail.com"
 SENHA = "thiago.thi"
 CICLO_ATIVO = False
+TIPO_CONTA = "PRACTICE"  # Conta padrão é demo
 
 def conectar():
     """Conecta à IQ Option."""
     iq = IQ_Option(EMAIL, SENHA)
     status, reason = iq.connect()
     if status:
-        iq.change_balance("PRACTICE")  # Conta prática
+        iq.change_balance(TIPO_CONTA)  # Configura a conta demo ou real
         return iq
     else:
         messagebox.showerror("Erro", f"Falha na conexão: {reason}")
         exit()
 
 iq = conectar()
+
+def alterar_tipo_conta(tipo):
+    """Altera o tipo de conta (demo ou real)."""
+    global TIPO_CONTA
+    TIPO_CONTA = tipo
+    log_mensagem(f"Conta alterada para: {'Demo' if tipo == 'PRACTICE' else 'Real'}")
 
 def verificar_ativo(ativo):
     """Verifica se o ativo está disponível para operações."""
@@ -37,35 +44,45 @@ def sincronizar_com_candle():
     proximo_candle = tempo_atual + (60 - (tempo_atual % 60))
     time.sleep(proximo_candle - tempo_atual)
 
-def executar_ciclo(ativo, payout, direcao, valor_inicial):
+def executar_ciclo(ativo, payout, direcao_inicial, valor_inicial):
     """Executa as operações conforme a sequência calculada."""
     global CICLO_ATIVO
     CICLO_ATIVO = True
 
     try:
-        sequencia, _ = calcular_martingale(valor_inicial, payout, direcao)
+        # Calcula a sequência sem a primeira ordem
+        sequencia, acoes = calcular_martingale(valor_inicial, payout, direcao_inicial)
     except ValueError as e:
         log_mensagem(f"Erro: {e}")
         return
 
-    log_mensagem(f"Iniciando ciclo para o ativo {ativo} | Direção: {direcao} | Payout: {payout}%")
+    log_mensagem(f"Iniciando ciclo para o ativo {ativo} | Direção inicial: {direcao_inicial} | Payout: {payout}%")
 
-    for index, valor in enumerate(sequencia):
+    # Primeira ordem com o valor digitado na GUI
+    sincronizar_com_candle()  # Espera o início do próximo candle
+    direcao_execucao = "call" if direcao_inicial == "call" else "put"
+    status, buy_order_id = iq.buy_digital_spot(ativo, valor_inicial, direcao_execucao, 1)
+
+    if status:
+        log_mensagem(f"Primeira ordem executada: {direcao_execucao} | Valor: R$ {valor_inicial:.2f}")
+    else:
+        log_mensagem(f"Erro ao executar a primeira ordem de valor R$ {valor_inicial:.2f}. Encerrando ciclo.")
+        return
+
+    # Executa o restante do ciclo com a sequência calculada
+    for index, (acao, valor) in enumerate(zip(acoes, sequencia)):
         if not CICLO_ATIVO:
             log_mensagem("Ciclo interrompido manualmente.")
             break
 
         sincronizar_com_candle()  # Espera o início do próximo candle
-        status, buy_order_id = iq.buy_digital_spot(ativo, valor, direcao, 1)
+        direcao_execucao = "call" if acao == "C" else "put"
+        status, buy_order_id = iq.buy_digital_spot(ativo, valor, direcao_execucao, 1)
 
         if status:
-            log_mensagem(f"Ordem {index + 1} executada: {direcao} | Valor: R$ {valor}")
+            log_mensagem(f"Ordem {index + 2} executada: {direcao_execucao} | Valor: R$ {valor:.2f}")
         else:
-            log_mensagem(f"Erro ao executar ordem de valor R$ {valor}. Encerrando ciclo.")
-            break
-
-        # Não verifica resultado, continua até interrupção manual
-        if not CICLO_ATIVO:
+            log_mensagem(f"Erro ao executar ordem de valor R$ {valor:.2f}. Encerrando ciclo.")
             break
 
     log_mensagem("Ciclo finalizado.")
@@ -95,7 +112,7 @@ def iniciar_ciclo():
         log_mensagem(f"Erro: O ativo '{ativo}' não está disponível para operações.")
         return
 
-    log_mensagem(f"Iniciando ciclo para o ativo {ativo} com payout {payout} e direção {direcao}.")
+    log_mensagem(f"Iniciando ciclo para o ativo {ativo} com payout {payout} e direção inicial {direcao}.")
     
     thread = threading.Thread(target=executar_ciclo, args=(ativo, payout, direcao, valor_inicial))
     thread.daemon = True
@@ -136,7 +153,13 @@ tk.Radiobutton(root, text="Venda", variable=var_direcao, value="put").grid(row=3
 tk.Button(root, text="Iniciar Ciclo", command=iniciar_ciclo).grid(row=4, column=0)
 tk.Button(root, text="Encerrar Ciclo", command=encerrar_ciclo).grid(row=4, column=1)
 
+# Seleção de tipo de conta
+tk.Label(root, text="Tipo de Conta:").grid(row=5, column=0)
+var_tipo_conta = tk.StringVar(value="PRACTICE")
+tk.Radiobutton(root, text="Demo", variable=var_tipo_conta, value="PRACTICE", command=lambda: alterar_tipo_conta("PRACTICE")).grid(row=5, column=1)
+tk.Radiobutton(root, text="Real", variable=var_tipo_conta, value="REAL", command=lambda: alterar_tipo_conta("REAL")).grid(row=5, column=2)
+
 text_log = tk.Text(root, height=10, width=50)
-text_log.grid(row=5, column=0, columnspan=2)
+text_log.grid(row=6, column=0, columnspan=2)
 
 root.mainloop()
