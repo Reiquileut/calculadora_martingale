@@ -5,7 +5,7 @@ import time
 EMAIL = "thiagosoteroprado@gmail.com"
 SENHA = "thiago.thi"
 ATIVO = "EURUSD-op"
-VALOR = 10  # Valor da operação
+VALOR = 1  # Valor da operação
 DIRECAO = "call"  # ou "put"
 EXPIRACAO = 1  # Tempo de expiração em minutos
 MAX_TENTATIVAS = 3  # Máximo de tentativas para reconexão
