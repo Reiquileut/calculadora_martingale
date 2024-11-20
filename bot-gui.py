@@ -39,10 +39,14 @@ def verificar_ativo(ativo):
         return False
 
 def sincronizar_com_candle():
-    """Sincroniza com o início do próximo candle."""
+    """Sincroniza com o início do próximo candle, interrompendo se o ciclo for encerrado."""
     tempo_atual = time.time()
     proximo_candle = tempo_atual + (60 - (tempo_atual % 60))
-    time.sleep(proximo_candle - tempo_atual)
+    
+    while time.time() < proximo_candle:
+        if not CICLO_ATIVO:
+            return  # Interrompe imediatamente se o ciclo foi encerrado
+        time.sleep(0.1)  # Evita sobrecarregar a CPU
 
 def executar_ciclo(ativo, payout, direcao_inicial, valor_inicial):
     """Executa as operações conforme a sequência calculada."""
@@ -60,6 +64,10 @@ def executar_ciclo(ativo, payout, direcao_inicial, valor_inicial):
 
     # Primeira ordem com o valor digitado na GUI
     sincronizar_com_candle()  # Espera o início do próximo candle
+    if not CICLO_ATIVO:
+        log_mensagem("Ciclo interrompido antes da primeira ordem.")
+        return
+
     direcao_execucao = "call" if direcao_inicial == "call" else "put"
     status, buy_order_id = iq.buy_digital_spot(ativo, valor_inicial, direcao_execucao, 1)
 
@@ -72,10 +80,14 @@ def executar_ciclo(ativo, payout, direcao_inicial, valor_inicial):
     # Executa o restante do ciclo com a sequência calculada
     for index, (acao, valor) in enumerate(zip(acoes, sequencia)):
         if not CICLO_ATIVO:
-            log_mensagem("Ciclo interrompido manualmente.")
+            log_mensagem("Ciclo interrompido manualmente durante a execução.")
             break
 
         sincronizar_com_candle()  # Espera o início do próximo candle
+        if not CICLO_ATIVO:
+            log_mensagem("Ciclo interrompido antes de executar uma ordem.")
+            break
+
         direcao_execucao = "call" if acao == "C" else "put"
         status, buy_order_id = iq.buy_digital_spot(ativo, valor, direcao_execucao, 1)
 
