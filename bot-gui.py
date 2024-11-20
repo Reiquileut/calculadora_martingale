@@ -33,8 +33,13 @@ def executar_ciclo(ativo, payout, direcao, valor_inicial):
     """Executa o ciclo de operações com base na calculadora."""
     global CICLO_ATIVO
     CICLO_ATIVO = True
-    sequencia = calcular_martingale(valor_inicial, payout)
-    
+
+    try:
+        sequencia = calcular_martingale(valor_inicial, payout)
+    except ValueError as e:
+        log_mensagem(f"Erro no cálculo do Martingale: {e}")
+        return
+
     for index, valor in enumerate(sequencia):
         if not CICLO_ATIVO:
             log_mensagem("Ciclo interrompido manualmente.")
