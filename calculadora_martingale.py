@@ -12,10 +12,7 @@ def calcular_martingale(valor_inicial, payout_porcentagem, acao='buy'):
         raise ValueError("O valor inicial deve ser no mínimo R$ 1.")
 
     payout_rate = payout_porcentagem / 100
-    if acao == 'buy':
-        actions_sequence = ['C', 'C', 'V', 'C', 'V', 'V', 'C', 'C']
-    else:
-        actions_sequence = ['V', 'V', 'C', 'V', 'C', 'C', 'V', 'V']
+    actions_sequence = ['C' if acao == 'buy' else 'V'] * 8  # Define 8 ações
 
     bets = []
     previous_losses = 0
@@ -24,8 +21,7 @@ def calcular_martingale(valor_inicial, payout_porcentagem, acao='buy'):
         if i == 0:
             bet_amount = valor_inicial
         else:
-            desired_profit = bets[i-1]
-            bet_amount = (previous_losses + desired_profit) / payout_rate
+            bet_amount = (previous_losses + valor_inicial) / payout_rate
         bets.append(round(bet_amount, 2))
         previous_losses += bets[i]
 
