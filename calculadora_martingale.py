@@ -8,8 +8,8 @@ def calculate_sequence(action):
         if payout_percentage <= 0 or payout_percentage > 100:
             messagebox.showerror("Erro", "Insira uma porcentagem de payout entre 0 e 100.")
             return
-        if initial_bet < 2:
-            messagebox.showerror("Erro", "O valor mínimo da primeira aposta é R$ 2.")
+        if initial_bet < 1:
+            messagebox.showerror("Erro", "O valor mínimo da primeira aposta é R$ 1.")
             return
     except ValueError:
         messagebox.showerror("Erro", "Insira valores numéricos válidos.")
