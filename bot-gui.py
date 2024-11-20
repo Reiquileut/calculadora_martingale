@@ -48,6 +48,10 @@ def sincronizar_com_candle():
             return  # Interrompe imediatamente se o ciclo foi encerrado
         time.sleep(0.1)  # Evita sobrecarregar a CPU
 
+def obter_saldo_disponivel():
+    """Obtém o saldo disponível da conta atual."""
+    return iq.get_balance()
+
 def executar_ciclo(ativo, payout, direcao_inicial, valor_inicial):
     """Executa as operações conforme a sequência calculada."""
     global CICLO_ATIVO
@@ -68,6 +72,11 @@ def executar_ciclo(ativo, payout, direcao_inicial, valor_inicial):
         log_mensagem("Ciclo interrompido antes da primeira ordem.")
         return
 
+    saldo_disponivel = obter_saldo_disponivel()
+    if saldo_disponivel < valor_inicial:
+        log_mensagem(f"Saldo insuficiente para executar a primeira ordem. Saldo disponível: R$ {saldo_disponivel:.2f}")
+        return
+
     direcao_execucao = "call" if direcao_inicial == "call" else "put"
     status, buy_order_id = iq.buy_digital_spot(ativo, valor_inicial, direcao_execucao, 1)
 
@@ -86,6 +95,11 @@ def executar_ciclo(ativo, payout, direcao_inicial, valor_inicial):
         sincronizar_com_candle()  # Espera o início do próximo candle
         if not CICLO_ATIVO:
             log_mensagem("Ciclo interrompido antes de executar uma ordem.")
+            break
+
+        saldo_disponivel = obter_saldo_disponivel()
+        if saldo_disponivel < valor:
+            log_mensagem(f"Saldo insuficiente para executar a ordem {index + 2}. Saldo disponível: R$ {saldo_disponivel:.2f}")
             break
 
         direcao_execucao = "call" if acao == "C" else "put"
