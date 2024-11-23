@@ -85,6 +85,7 @@ def executar_ciclo(ativo, payout, direcao_inicial, valor_inicial):
         sequencia, acoes = calcular_martingale(valor_inicial, payout, direcao_inicial)
     except ValueError as e:
         log_mensagem(f"Erro: {e}")
+        CICLO_ATIVO = False  # Certifique-se de redefinir aqui
         return
 
     log_mensagem(f"Iniciando ciclo para o ativo {ativo} | Direção inicial: {direcao_inicial} | Payout: {payout}%")
@@ -92,11 +93,13 @@ def executar_ciclo(ativo, payout, direcao_inicial, valor_inicial):
     sincronizar_com_candle()
     if not CICLO_ATIVO:
         log_mensagem("Ciclo interrompido antes da primeira ordem.")
+        CICLO_ATIVO = False  # Certifique-se de redefinir aqui
         return
 
     saldo_disponivel = obter_saldo_disponivel()
     if saldo_disponivel < valor_inicial:
         log_mensagem(f"Saldo insuficiente. Saldo disponível: R$ {saldo_disponivel:.2f}")
+        CICLO_ATIVO = False  # Certifique-se de redefinir aqui
         return
 
     direcao_execucao = "call" if direcao_inicial == "call" else "put"
@@ -106,6 +109,7 @@ def executar_ciclo(ativo, payout, direcao_inicial, valor_inicial):
         log_mensagem(f"Primeira ordem executada: {direcao_execucao} | Valor: R$ {valor_inicial:.2f}")
     else:
         log_mensagem(f"Erro ao executar a primeira ordem de valor R$ {valor_inicial:.2f}. Encerrando ciclo.")
+        CICLO_ATIVO = False  # Certifique-se de redefinir aqui
         return
 
     for index, (acao, valor) in enumerate(zip(acoes, sequencia)):
@@ -132,7 +136,7 @@ def executar_ciclo(ativo, payout, direcao_inicial, valor_inicial):
             break
 
     log_mensagem("Ciclo finalizado.")
-
+    CICLO_ATIVO = False  # Adicione esta linha para redefinir a variável.
 
 def iniciar_ciclo():
     """Inicia o ciclo a partir da GUI."""
