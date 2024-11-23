@@ -2,8 +2,8 @@ from iqoptionapi.stable_api import IQ_Option
 import time
 
 # Configurações
-EMAIL = "thiagosoteroprado@gmail.com"
-SENHA = "thiago.thi"
+EMAIL = "email"
+SENHA = "senha"
 ATIVO = "EURUSD-op"
 VALOR = 1  # Valor da operação
 DIRECAO = "call"  # ou "put"

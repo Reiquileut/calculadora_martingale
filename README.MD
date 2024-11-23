@@ -1,133 +1,89 @@
-# **Calculadora de Martingale, Bot GUI e Catalogador**
+# Bot Martingale para IQ Option
 
-Este repositório contém um conjunto de scripts Python para realizar operações financeiras utilizando a estratégia de Martingale, com suporte para análise de dados históricos, simulação, e execução automatizada de ordens.
+Este projeto é um bot automatizado para realizar operações na IQ Option utilizando a estratégia de **Martingale**. Ele conta com uma interface gráfica (GUI) que permite login, seleção de conta e gerenciamento visual do saldo.
 
-## **Componentes**
+## Funcionalidades
 
-1. **Bot GUI**: Uma interface gráfica para executar operações automatizadas com controle manual de ciclos.
-2. **Calculadora de Martingale**: Interface gráfica para calcular a sequência de apostas baseada no payout e estratégia de Martingale.
-3. **Catalogador**: Analisa dados históricos de candles para avaliar a eficácia da estratégia.
-4. **Get Ativos**: Lista ativos disponíveis para operação na IQ Option.
-5. **Bot IQ**: Script básico para conectar à IQ Option e realizar operações.
+- **Login via GUI**: Insira seu e-mail e senha diretamente na interface.
+- **Seleção de Conta**: Altere facilmente entre conta **Demo** e **Real**.
+- **Estratégia Martingale**: Execute ciclos automáticos de negociação com cálculos otimizados.
+- **Sincronização com Candles**: Garante que as operações sejam realizadas no início de cada candle.
+- **Logs Detalhados**: Acompanhe o progresso e possíveis erros diretamente na interface.
 
----
+## Requisitos
 
-## **Sumário**
+Certifique-se de instalar as dependências listadas no arquivo `requirements.txt`. Use o seguinte comando para instalar:
 
-- [Pré-requisitos](#pré-requisitos)
-- [Instalação](#instalação)
-- [Uso](#uso)
-  - [Bot GUI](#bot-gui)
-  - [Calculadora de Martingale](#calculadora-de-martingale)
-  - [Catalogador](#catalogador)
-  - [Get Ativos](#get-ativos)
-- [Observações Importantes](#observações-importantes)
-- [Licença](#licença)
+```bash
+pip install -r requirements.txt
 
----
+Estrutura do Projeto
 
-## **Pré-requisitos**
+.
+├── bot-gui.py                # Interface principal do bot
+├── calculadora_martingale.py # Cálculos relacionados à estratégia de Martingale
+├── catalogador.py            # Análise de dados históricos de candles
+├── get-ativos.py             # Listagem de ativos disponíveis na IQ Option
+├── README.md                 # Documentação do projeto
+├── requirements.txt          # Dependências do projeto
 
-Certifique-se de ter:
+Como Usar
 
-- **Python 3.7 ou superior**
-- **MetaTrader 5** (para o uso do Catalogador)
-- **Conta na IQ Option** para execução de operações.
-- **Bibliotecas Python listadas no `requirements.txt`**
+	1.	Inicie o Bot:
+Execute o arquivo bot-gui.py:
 
----
+python bot-gui.py
 
-## **Instalação**
 
-1. **Clone o repositório (opcional):**
+	2.	Faça Login:
+	•	Insira seu e-mail e senha no campo correspondente.
+	•	Clique em Login. O saldo será exibido na interface após a conexão.
+	3.	Configure a Operação:
+	•	Preencha os campos:
+	•	Ativo: Nome do ativo (exemplo: EURUSD).
+	•	Payout: Porcentagem de retorno (exemplo: 85).
+	•	Valor Inicial: Valor da primeira operação.
+	•	Selecione a direção inicial da operação (Compra ou Venda).
+	4.	Selecione a Conta:
+	•	Escolha entre Demo e Real na interface.
+	5.	Inicie o Ciclo:
+	•	Clique no botão Iniciar Ciclo para iniciar as operações automatizadas.
+	•	Acompanhe os logs para monitorar o progresso.
+	6.	Interrompa o Ciclo (se necessário):
+	•	Clique em Encerrar Ciclo para parar manualmente as operações.
 
-    ```bash
-    git clone https://github.com/seu-usuario/seu-repositorio.git
-    cd seu-repositorio
-    ```
+Funcionalidades da Interface
 
-2. **Crie um ambiente virtual (recomendado):**
+Campos de Login
 
-    ```bash
-    python -m venv venv
-    source venv/bin/activate  # macOS/Linux
-    venv\Scripts\activate     # Windows
-    ```
+	•	E-mail: Insira o e-mail usado para acessar a IQ Option.
+	•	Senha: Insira sua senha (campo protegido).
 
-3. **Instale as dependências:**
+Configuração de Operações
 
-    ```bash
-    pip install -r requirements.txt
-    ```
+	•	Ativo: Nome do ativo para operar (ex.: EURUSD).
+	•	Payout: Retorno esperado em porcentagem.
+	•	Valor Inicial: Valor da primeira operação.
+	•	Direção: Escolha entre Compra ou Venda.
 
----
+Gerenciamento de Conta
 
-## **Uso**
+	•	Tipo de Conta: Alterne entre conta Demo e Real.
+	•	Saldo Atual: Mostra o saldo disponível na conta selecionada.
 
-### **Bot GUI**
+Logs
 
-1. Execute o bot GUI:
+	•	Exibe mensagens detalhadas sobre o progresso das operações e erros encontrados.
 
-    ```bash
-    python bot-gui.py
-    ```
+Contribuições
 
-2. **Configurações na GUI:**
+Contribuições são bem-vindas! Para colaborar:
+	1.	Faça um fork deste repositório.
+	2.	Crie uma branch para sua funcionalidade: git checkout -b minha-funcionalidade.
+	3.	Envie seu PR para revisão.
 
-   - **Ativo:** Insira o ativo desejado (ex.: "EURUSD").
-   - **Payout (%):** Payout da corretora (ex.: "80").
-   - **Valor Inicial:** Valor da primeira aposta.
-   - **Tipo de Conta:** Selecione entre Demo e Real.
-   - **Direção:** Escolha "Compra" ou "Venda".
+Licença
 
-3. **Ciclo de Operações:**
-   - Clique em **Iniciar Ciclo** para começar a sequência.
-   - O ciclo será interrompido manualmente ao clicar em **Encerrar Ciclo** ou automaticamente ao atingir saldo insuficiente.
+Este projeto é licenciado sob a MIT License.
 
-4. **Fluxo Manual:**
-   - Quando um gain é atingido, o ciclo é parado manualmente.
-   - Para reiniciar, ajuste os parâmetros e clique novamente em **Iniciar Ciclo**.
-
----
-
-### **Calculadora de Martingale**
-
-- Calcule valores e direções das apostas para maximizar o lucro com a interface gráfica:
-
-    ```bash
-    python calculadora_martingale.py
-    ```
-
----
-
-### **Catalogador**
-
-- Analise dados históricos para verificar a eficácia da estratégia:
-
-    ```bash
-    python catalogador.py
-    ```
-
----
-
-### **Get Ativos**
-
-- Liste os ativos disponíveis para operação:
-
-    ```bash
-    python get-ativos.py
-    ```
-
----
-
-## **Observações Importantes**
-
-- **Uso Responsável**: O Martingale pode levar a perdas significativas.
-- **MetaTrader 5**: O catalogador requer o MetaTrader 5 configurado corretamente.
-- **Controle Manual**: O bot GUI permite parar e reiniciar o ciclo conforme necessário, proporcionando maior controle.
-
----
-
-## **Licença**
-
-Este projeto é licenciado sob os termos da licença MIT. Consulte o arquivo LICENSE para mais detalhes.
+Atenção: Use este bot de forma responsável. A negociação na IQ Option envolve risco, e você pode perder todo o capital investido.
