@@ -9,14 +9,14 @@ import time
 EMAIL = "thiagosoteroprado@gmail.com"
 SENHA = "thiago.thi"
 CICLO_ATIVO = False
-TIPO_CONTA = "PRACTICE"  # Conta padrão é demo
+TIPO_CONTA = "PRACTICE"  # Conta padrão é demo PRACTICE ou REAL
 
 def conectar():
     """Conecta à IQ Option."""
     iq = IQ_Option(EMAIL, SENHA)
     status, reason = iq.connect()
     if status:
-        iq.change_balance(TIPO_CONTA)  # Configura a conta demo ou real
+        iq.change_balance(TIPO_CONTA)  # Define o tipo de conta ao conectar
         return iq
     else:
         messagebox.showerror("Erro", f"Falha na conexão: {reason}")
@@ -26,9 +26,16 @@ iq = conectar()
 
 def alterar_tipo_conta(tipo):
     """Altera o tipo de conta (demo ou real)."""
-    global TIPO_CONTA
+    global TIPO_CONTA, iq
     TIPO_CONTA = tipo
-    log_mensagem(f"Conta alterada para: {'Demo' if tipo == 'PRACTICE' else 'Real'}")
+    iq.change_balance(TIPO_CONTA)  # Altera o tipo de conta
+    saldo = obter_saldo_disponivel()  # Atualiza o saldo da conta atual
+
+    # Atualiza os rótulos da interface gráfica
+    label_saldo.config(text=f"R$ {saldo:.2f}")
+    label_conta.config(text="Demo" if tipo == "PRACTICE" else "Real")
+
+    log_mensagem(f"Conta alterada para: {'Demo' if tipo == 'PRACTICE' else 'Real'} | Saldo: R$ {saldo:.2f}")
 
 def verificar_ativo(ativo):
     """Verifica se o ativo está disponível para operações."""
@@ -39,7 +46,7 @@ def verificar_ativo(ativo):
         return False
 
 def sincronizar_com_candle():
-    """Sincroniza com o início do próximo candle, interrompendo se o ciclo for encerrado."""
+    """Sincroniza com o início do próximo candle."""
     tempo_atual = time.time()
     proximo_candle = tempo_atual + (60 - (tempo_atual % 60))
     
@@ -50,7 +57,9 @@ def sincronizar_com_candle():
 
 def obter_saldo_disponivel():
     """Obtém o saldo disponível da conta atual."""
-    return iq.get_balance()
+    saldo = iq.get_balance()
+    log_mensagem(f"Saldo atualizado: R$ {saldo:.2f}")
+    return saldo
 
 def executar_ciclo(ativo, payout, direcao_inicial, valor_inicial):
     """Executa as operações conforme a sequência calculada."""
@@ -58,7 +67,6 @@ def executar_ciclo(ativo, payout, direcao_inicial, valor_inicial):
     CICLO_ATIVO = True
 
     try:
-        # Calcula a sequência sem a primeira ordem
         sequencia, acoes = calcular_martingale(valor_inicial, payout, direcao_inicial)
     except ValueError as e:
         log_mensagem(f"Erro: {e}")
@@ -66,19 +74,18 @@ def executar_ciclo(ativo, payout, direcao_inicial, valor_inicial):
 
     log_mensagem(f"Iniciando ciclo para o ativo {ativo} | Direção inicial: {direcao_inicial} | Payout: {payout}%")
 
-    # Primeira ordem com o valor digitado na GUI
-    sincronizar_com_candle()  # Espera o início do próximo candle
+    sincronizar_com_candle()
     if not CICLO_ATIVO:
         log_mensagem("Ciclo interrompido antes da primeira ordem.")
         return
 
     saldo_disponivel = obter_saldo_disponivel()
     if saldo_disponivel < valor_inicial:
-        log_mensagem(f"Saldo insuficiente para executar a primeira ordem. Saldo disponível: R$ {saldo_disponivel:.2f}")
+        log_mensagem(f"Saldo insuficiente. Saldo disponível: R$ {saldo_disponivel:.2f}")
         return
 
     direcao_execucao = "call" if direcao_inicial == "call" else "put"
-    status, buy_order_id = iq.buy_digital_spot(ativo, valor_inicial, direcao_execucao, 1)
+    status, _ = iq.buy_digital_spot(ativo, valor_inicial, direcao_execucao, 1)
 
     if status:
         log_mensagem(f"Primeira ordem executada: {direcao_execucao} | Valor: R$ {valor_inicial:.2f}")
@@ -86,24 +93,22 @@ def executar_ciclo(ativo, payout, direcao_inicial, valor_inicial):
         log_mensagem(f"Erro ao executar a primeira ordem de valor R$ {valor_inicial:.2f}. Encerrando ciclo.")
         return
 
-    # Executa o restante do ciclo com a sequência calculada
     for index, (acao, valor) in enumerate(zip(acoes, sequencia)):
         if not CICLO_ATIVO:
             log_mensagem("Ciclo interrompido manualmente durante a execução.")
             break
 
-        sincronizar_com_candle()  # Espera o início do próximo candle
+        sincronizar_com_candle()
         if not CICLO_ATIVO:
-            log_mensagem("Ciclo interrompido antes de executar uma ordem.")
             break
 
         saldo_disponivel = obter_saldo_disponivel()
         if saldo_disponivel < valor:
-            log_mensagem(f"Saldo insuficiente para executar a ordem {index + 2}. Saldo disponível: R$ {saldo_disponivel:.2f}")
+            log_mensagem(f"Saldo insuficiente para a ordem {index + 2}. Saldo disponível: R$ {saldo_disponivel:.2f}")
             break
 
         direcao_execucao = "call" if acao == "C" else "put"
-        status, buy_order_id = iq.buy_digital_spot(ativo, valor, direcao_execucao, 1)
+        status, _ = iq.buy_digital_spot(ativo, valor, direcao_execucao, 1)
 
         if status:
             log_mensagem(f"Ordem {index + 2} executada: {direcao_execucao} | Valor: R$ {valor:.2f}")
@@ -185,7 +190,20 @@ var_tipo_conta = tk.StringVar(value="PRACTICE")
 tk.Radiobutton(root, text="Demo", variable=var_tipo_conta, value="PRACTICE", command=lambda: alterar_tipo_conta("PRACTICE")).grid(row=5, column=1)
 tk.Radiobutton(root, text="Real", variable=var_tipo_conta, value="REAL", command=lambda: alterar_tipo_conta("REAL")).grid(row=5, column=2)
 
+# Exibição de saldo e tipo de conta
+tk.Label(root, text="Saldo Atual:").grid(row=6, column=0)
+label_saldo = tk.Label(root, text="R$ 0.00")
+label_saldo.grid(row=6, column=1)
+
+tk.Label(root, text="Conta Atual:").grid(row=7, column=0)
+label_conta = tk.Label(root, text="Demo")
+label_conta.grid(row=7, column=1)
+
+# Logs na parte inferior
 text_log = tk.Text(root, height=10, width=50)
-text_log.grid(row=6, column=0, columnspan=2)
+text_log.grid(row=8, column=0, columnspan=3)
+
+# Atualizar saldo ao iniciar
+alterar_tipo_conta(TIPO_CONTA)
 
 root.mainloop()
