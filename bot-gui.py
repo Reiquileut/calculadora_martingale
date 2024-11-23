@@ -5,31 +5,38 @@ from iqoptionapi.stable_api import IQ_Option
 from calculadora_martingale import calcular_martingale
 import time
 
-# Configurações
-EMAIL = "thiagosoteroprado@gmail.com"
-SENHA = "thiago.thi"
+# Configurações Globais
 CICLO_ATIVO = False
 TIPO_CONTA = "PRACTICE"  # Conta padrão é demo PRACTICE ou REAL
+iq = None  # Variável global para o objeto IQ_Option
 
-def conectar():
-    """Conecta à IQ Option."""
-    iq = IQ_Option(EMAIL, SENHA)
+
+def conectar(email, senha):
+    """Conecta à IQ Option com as credenciais fornecidas pelo usuário."""
+    global iq
+    iq = IQ_Option(email, senha)
     status, reason = iq.connect()
     if status:
-        iq.change_balance(TIPO_CONTA)  # Define o tipo de conta ao conectar
-        return iq
+        iq.change_balance(TIPO_CONTA)  # Define o tipo de conta
+        log_mensagem("Conexão bem-sucedida!")
+        saldo = obter_saldo_disponivel()
+        label_saldo.config(text=f"R$ {saldo:.2f}")
+        label_conta.config(text="Demo" if TIPO_CONTA == "PRACTICE" else "Real")
     else:
-        messagebox.showerror("Erro", f"Falha na conexão: {reason}")
-        exit()
+        messagebox.showerror("Erro de Login", f"Falha na conexão: {reason}")
+        iq = None
 
-iq = conectar()
 
 def alterar_tipo_conta(tipo):
     """Altera o tipo de conta (demo ou real)."""
-    global TIPO_CONTA, iq
+    global TIPO_CONTA
+    if iq is None:
+        messagebox.showerror("Erro", "Faça login antes de alterar o tipo de conta.")
+        return
+
     TIPO_CONTA = tipo
     iq.change_balance(TIPO_CONTA)  # Altera o tipo de conta
-    saldo = obter_saldo_disponivel()  # Atualiza o saldo da conta atual
+    saldo = obter_saldo_disponivel()
 
     # Atualiza os rótulos da interface gráfica
     label_saldo.config(text=f"R$ {saldo:.2f}")
@@ -37,29 +44,37 @@ def alterar_tipo_conta(tipo):
 
     log_mensagem(f"Conta alterada para: {'Demo' if tipo == 'PRACTICE' else 'Real'} | Saldo: R$ {saldo:.2f}")
 
+
 def verificar_ativo(ativo):
     """Verifica se o ativo está disponível para operações."""
+    if iq is None:
+        return False
     open_time = iq.get_all_open_time()
     if ativo in open_time["digital"] and open_time["digital"][ativo]["open"]:
         return True
     else:
         return False
 
+
 def sincronizar_com_candle():
     """Sincroniza com o início do próximo candle."""
     tempo_atual = time.time()
     proximo_candle = tempo_atual + (60 - (tempo_atual % 60))
-    
+
     while time.time() < proximo_candle:
         if not CICLO_ATIVO:
             return  # Interrompe imediatamente se o ciclo foi encerrado
         time.sleep(0.1)  # Evita sobrecarregar a CPU
 
+
 def obter_saldo_disponivel():
     """Obtém o saldo disponível da conta atual."""
+    if iq is None:
+        return 0.0
     saldo = iq.get_balance()
     log_mensagem(f"Saldo atualizado: R$ {saldo:.2f}")
     return saldo
+
 
 def executar_ciclo(ativo, payout, direcao_inicial, valor_inicial):
     """Executa as operações conforme a sequência calculada."""
@@ -118,6 +133,7 @@ def executar_ciclo(ativo, payout, direcao_inicial, valor_inicial):
 
     log_mensagem("Ciclo finalizado.")
 
+
 def iniciar_ciclo():
     """Inicia o ciclo a partir da GUI."""
     global CICLO_ATIVO
@@ -144,10 +160,11 @@ def iniciar_ciclo():
         return
 
     log_mensagem(f"Iniciando ciclo para o ativo {ativo} com payout {payout} e direção inicial {direcao}.")
-    
+
     thread = threading.Thread(target=executar_ciclo, args=(ativo, payout, direcao, valor_inicial))
     thread.daemon = True
     thread.start()
+
 
 def encerrar_ciclo():
     """Encerra o ciclo manualmente."""
@@ -155,55 +172,65 @@ def encerrar_ciclo():
     CICLO_ATIVO = False
     log_mensagem("Ciclo interrompido manualmente.")
 
+
 def log_mensagem(msg):
     """Exibe logs na GUI."""
     text_log.insert(tk.END, f"{msg}\n")
     text_log.see(tk.END)
 
+
 # Interface Gráfica
 root = tk.Tk()
 root.title("Bot Martingale")
 
+# Campos de Login
+tk.Label(root, text="E-mail:").grid(row=0, column=0)
+entry_email = tk.Entry(root)
+entry_email.grid(row=0, column=1, columnspan=2)
+
+tk.Label(root, text="Senha:").grid(row=1, column=0)
+entry_senha = tk.Entry(root, show="*")  # Oculta o texto da senha
+entry_senha.grid(row=1, column=1, columnspan=2)
+
+tk.Button(root, text="Login", command=lambda: conectar(entry_email.get(), entry_senha.get())).grid(row=2, column=0, columnspan=3)
+
 # Campos da GUI
-tk.Label(root, text="Ativo:").grid(row=0, column=0)
+tk.Label(root, text="Ativo:").grid(row=3, column=0)
 entry_ativo = tk.Entry(root)
-entry_ativo.grid(row=0, column=1)
+entry_ativo.grid(row=3, column=1)
 
-tk.Label(root, text="Payout (%):").grid(row=1, column=0)
+tk.Label(root, text="Payout (%):").grid(row=4, column=0)
 entry_payout = tk.Entry(root)
-entry_payout.grid(row=1, column=1)
+entry_payout.grid(row=4, column=1)
 
-tk.Label(root, text="Valor Inicial:").grid(row=2, column=0)
+tk.Label(root, text="Valor Inicial:").grid(row=5, column=0)
 entry_valor_inicial = tk.Entry(root)
-entry_valor_inicial.grid(row=2, column=1)
+entry_valor_inicial.grid(row=5, column=1)
 
 var_direcao = tk.StringVar(value="call")
-tk.Radiobutton(root, text="Compra", variable=var_direcao, value="call").grid(row=3, column=0)
-tk.Radiobutton(root, text="Venda", variable=var_direcao, value="put").grid(row=3, column=1)
+tk.Radiobutton(root, text="Compra", variable=var_direcao, value="call").grid(row=6, column=0)
+tk.Radiobutton(root, text="Venda", variable=var_direcao, value="put").grid(row=6, column=1)
 
-tk.Button(root, text="Iniciar Ciclo", command=iniciar_ciclo).grid(row=4, column=0)
-tk.Button(root, text="Encerrar Ciclo", command=encerrar_ciclo).grid(row=4, column=1)
+tk.Button(root, text="Iniciar Ciclo", command=iniciar_ciclo).grid(row=7, column=0)
+tk.Button(root, text="Encerrar Ciclo", command=encerrar_ciclo).grid(row=7, column=1)
 
 # Seleção de tipo de conta
-tk.Label(root, text="Tipo de Conta:").grid(row=5, column=0)
+tk.Label(root, text="Tipo de Conta:").grid(row=8, column=0)
 var_tipo_conta = tk.StringVar(value="PRACTICE")
-tk.Radiobutton(root, text="Demo", variable=var_tipo_conta, value="PRACTICE", command=lambda: alterar_tipo_conta("PRACTICE")).grid(row=5, column=1)
-tk.Radiobutton(root, text="Real", variable=var_tipo_conta, value="REAL", command=lambda: alterar_tipo_conta("REAL")).grid(row=5, column=2)
+tk.Radiobutton(root, text="Demo", variable=var_tipo_conta, value="PRACTICE", command=lambda: alterar_tipo_conta("PRACTICE")).grid(row=8, column=1)
+tk.Radiobutton(root, text="Real", variable=var_tipo_conta, value="REAL", command=lambda: alterar_tipo_conta("REAL")).grid(row=8, column=2)
 
 # Exibição de saldo e tipo de conta
-tk.Label(root, text="Saldo Atual:").grid(row=6, column=0)
+tk.Label(root, text="Saldo Atual:").grid(row=9, column=0)
 label_saldo = tk.Label(root, text="R$ 0.00")
-label_saldo.grid(row=6, column=1)
+label_saldo.grid(row=9, column=1)
 
-tk.Label(root, text="Conta Atual:").grid(row=7, column=0)
+tk.Label(root, text="Conta Atual:").grid(row=10, column=0)
 label_conta = tk.Label(root, text="Demo")
-label_conta.grid(row=7, column=1)
+label_conta.grid(row=10, column=1)
 
 # Logs na parte inferior
 text_log = tk.Text(root, height=10, width=50)
-text_log.grid(row=8, column=0, columnspan=3)
-
-# Atualizar saldo ao iniciar
-alterar_tipo_conta(TIPO_CONTA)
+text_log.grid(row=11, column=0, columnspan=3)
 
 root.mainloop()
