@@ -6,11 +6,13 @@ from iqoptionapi.stable_api import IQ_Option
 from calculadora_martingale import calcular_martingale
 import time
 import logging
+import os
+from datetime import datetime
 import traceback
 
-# Configuração do logging
-logging.basicConfig(filename='bot_martingale.log', level=logging.INFO,
-                    format='%(asctime)s - %(levelname)s - %(message)s')
+# Configuração inicial do logger
+logger = logging.getLogger()
+logger.setLevel(logging.INFO)
 
 class IQOptionAPI:
     """Classe para gerenciar a conexão e operações com a IQ Option."""
@@ -159,6 +161,8 @@ class BotMartingaleApp:
             self.api = IQOptionAPI(email, senha)
             status, reason = self.api.conectar()
             if status:
+                # Configura o logging para a nova sessão
+                self.setup_logging_session()
                 self.api.alterar_tipo_conta(self.TIPO_CONTA)
                 self.log_mensagem("Conexão bem-sucedida!")
                 saldo = self.obter_saldo_disponivel()
@@ -168,19 +172,59 @@ class BotMartingaleApp:
                 # Habilitar botões após login
                 self.root.after(0, lambda: self.radio_demo.config(state=tk.NORMAL))
                 self.root.after(0, lambda: self.radio_real.config(state=tk.NORMAL))
-                logging.info("Usuário conectado com sucesso.")
+                logger.info("Usuário conectado com sucesso.")
             else:
                 self.api = None
                 self.atualizar_status("Erro ao conectar.", "red")
                 self.log_mensagem(f"Falha na conexão: {reason}")
                 messagebox.showerror("Erro de Login", f"Falha na conexão: {reason}")
-                logging.error(f"Falha na conexão: {reason}")
+                logger.error(f"Falha na conexão: {reason}")
         except Exception as e:
             self.api = None
             self.atualizar_status("Erro ao conectar.", "red")
             self.log_mensagem(f"Exceção durante conexão: {e}")
             messagebox.showerror("Erro de Login", f"Exceção durante conexão: {e}")
-            logging.error(f"Exceção durante conexão: {traceback.format_exc()}")
+            logger.error(f"Exceção durante conexão: {traceback.format_exc()}")
+
+    def setup_logging_session(self):
+        """Configura o logging para uma nova sessão."""
+        # Criar diretório 'logs' se não existir
+        if not os.path.exists('logs'):
+            os.makedirs('logs')
+
+        # Gerar um novo nome de arquivo de log com timestamp
+        log_filename = datetime.now().strftime("bot_martingale_%Y%m%d_%H%M%S.log")
+        log_filepath = os.path.join('logs', log_filename)
+
+        # Remover handlers existentes
+        logger = logging.getLogger()
+        for handler in logger.handlers[:]:
+            logger.removeHandler(handler)
+            handler.close()
+
+        # Criar um novo handler para o novo arquivo de log
+        handler = logging.FileHandler(log_filepath)
+        handler.setLevel(logging.INFO)
+        formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
+        handler.setFormatter(formatter)
+        logger.addHandler(handler)
+
+        # Manter apenas os últimos 15 arquivos de log
+        self.cleanup_log_files()
+
+    def cleanup_log_files(self):
+        """Mantém apenas os últimos 15 arquivos de log."""
+        log_files = [f for f in os.listdir('logs') if f.startswith('bot_martingale_') and f.endswith('.log')]
+        if len(log_files) > 15:
+            # Ordenar arquivos por data de criação (do mais antigo para o mais recente)
+            log_files.sort()
+            files_to_delete = log_files[:-15]  # Manter os últimos 15 arquivos
+            for file_name in files_to_delete:
+                file_path = os.path.join('logs', file_name)
+                try:
+                    os.remove(file_path)
+                except Exception as e:
+                    print(f"Erro ao excluir arquivo de log {file_name}: {e}")
 
     def alterar_tipo_conta(self):
         """Altera o tipo de conta (Demo ou Real)."""
@@ -204,7 +248,7 @@ class BotMartingaleApp:
         self.atualizar_saldo(saldo)
         self.atualizar_conta("Demo" if self.TIPO_CONTA == "PRACTICE" else "Real")
         self.log_mensagem(f"Conta alterada para: {'Demo' if self.TIPO_CONTA == 'PRACTICE' else 'Real'} | Saldo: R$ {saldo:.2f}")
-        logging.info(f"Tipo de conta alterado para {self.TIPO_CONTA}.")
+        logger.info(f"Tipo de conta alterado para {self.TIPO_CONTA}.")
 
     def verificar_ativo(self, ativo):
         """Verifica se o ativo está disponível para operações digitais."""
@@ -228,7 +272,7 @@ class BotMartingaleApp:
             return 0.0
         saldo = self.api.obter_saldo()
         self.log_mensagem(f"Saldo atualizado: R$ {saldo:.2f}")
-        logging.info(f"Saldo atualizado: R$ {saldo:.2f}")
+        logger.info(f"Saldo atualizado: R$ {saldo:.2f}")
         return saldo
 
     def log_mensagem(self, msg):
@@ -237,7 +281,7 @@ class BotMartingaleApp:
             self.text_log.insert(tk.END, f"{msg}\n")
             self.text_log.see(tk.END)
         self.root.after(0, _log)
-        logging.info(msg)
+        logger.info(msg)
 
     def atualizar_status(self, mensagem, cor="black"):
         """Atualiza o status exibido na interface."""
@@ -270,12 +314,12 @@ class BotMartingaleApp:
             self.CICLO_ATIVO = False
             self.root.after(0, lambda: self.button_iniciar.config(state=tk.NORMAL))
             self.root.after(0, lambda: self.button_encerrar.config(state=tk.DISABLED))
-            logging.error(f"Erro ao calcular Martingale: {e}")
+            logger.error(f"Erro ao calcular Martingale: {e}")
             return
 
         self.log_mensagem(f"Iniciando ciclo para o ativo {ativo} | Direção inicial: {direcao_inicial} | Payout: {payout}%")
         self.atualizar_status("Executando ciclo...", "blue")
-        logging.info(f"Iniciando ciclo para o ativo {ativo}.")
+        logger.info(f"Iniciando ciclo para o ativo {ativo}.")
 
         # Mostrar mensagem de confirmação
         messagebox.showinfo("Ciclo Iniciado", f"O ciclo para o ativo {ativo} foi iniciado.")
@@ -285,7 +329,7 @@ class BotMartingaleApp:
             if not self.CICLO_ATIVO:
                 self.log_mensagem("Ciclo interrompido antes da primeira ordem.")
                 self.atualizar_status("Ciclo interrompido antes da execução.", "red")
-                logging.warning("Ciclo interrompido antes da primeira ordem.")
+                logger.warning("Ciclo interrompido antes da primeira ordem.")
                 return
 
             saldo_disponivel = self.obter_saldo_disponivel()
@@ -293,7 +337,7 @@ class BotMartingaleApp:
             if saldo_disponivel < valor_inicial:
                 self.log_mensagem(f"Saldo insuficiente. Saldo disponível: R$ {saldo_disponivel:.2f}")
                 self.atualizar_status("Saldo insuficiente.", "red")
-                logging.error("Saldo insuficiente para iniciar o ciclo.")
+                logger.error("Saldo insuficiente para iniciar o ciclo.")
                 return
 
             direcao_execucao = "call" if direcao_inicial == "call" else "put"
@@ -301,18 +345,18 @@ class BotMartingaleApp:
 
             if status:
                 self.log_mensagem(f"Primeira ordem executada: {direcao_execucao} | Valor: R$ {valor_inicial:.2f}")
-                logging.info(f"Primeira ordem executada: {direcao_execucao} | Valor: R$ {valor_inicial:.2f}")
+                logger.info(f"Primeira ordem executada: {direcao_execucao} | Valor: R$ {valor_inicial:.2f}")
             else:
                 self.log_mensagem(f"Erro ao executar a primeira ordem de valor R$ {valor_inicial:.2f}. Encerrando ciclo.")
                 self.atualizar_status("Erro na execução da primeira ordem.", "red")
-                logging.error("Erro na execução da primeira ordem.")
+                logger.error("Erro na execução da primeira ordem.")
                 return
 
             for index, (acao, valor) in enumerate(zip(acoes, sequencia)):
                 if not self.CICLO_ATIVO:
                     self.log_mensagem("Ciclo interrompido manualmente durante a execução.")
                     self.atualizar_status("Ciclo interrompido.", "red")
-                    logging.warning("Ciclo interrompido manualmente durante a execução.")
+                    logger.warning("Ciclo interrompido manualmente durante a execução.")
                     break
 
                 self.sincronizar_com_candle()
@@ -324,7 +368,7 @@ class BotMartingaleApp:
                 if saldo_disponivel < valor:
                     self.log_mensagem(f"Saldo insuficiente para a ordem {index + 2}. Saldo disponível: R$ {saldo_disponivel:.2f}")
                     self.atualizar_status("Saldo insuficiente para sequência.", "red")
-                    logging.error("Saldo insuficiente durante a sequência.")
+                    logger.error("Saldo insuficiente durante a sequência.")
                     break
 
                 direcao_execucao = "call" if acao == "C" else "put"
@@ -332,11 +376,11 @@ class BotMartingaleApp:
 
                 if status:
                     self.log_mensagem(f"Ordem {index + 2} executada: {direcao_execucao} | Valor: R$ {valor:.2f}")
-                    logging.info(f"Ordem {index + 2} executada: {direcao_execucao} | Valor: R$ {valor:.2f}")
+                    logger.info(f"Ordem {index + 2} executada: {direcao_execucao} | Valor: R$ {valor:.2f}")
                 else:
                     self.log_mensagem(f"Erro ao executar ordem de valor R$ {valor:.2f}. Encerrando ciclo.")
                     self.atualizar_status("Erro na execução de uma ordem.", "red")
-                    logging.error(f"Erro ao executar ordem de valor R$ {valor:.2f}.")
+                    logger.error(f"Erro ao executar ordem de valor R$ {valor:.2f}.")
                     break
 
             # Atualizar saldo após o ciclo
@@ -346,7 +390,7 @@ class BotMartingaleApp:
         except Exception as e:
             self.log_mensagem(f"Erro inesperado durante o ciclo: {e}")
             self.atualizar_status("Erro inesperado durante o ciclo.", "red")
-            logging.error(f"Erro inesperado durante o ciclo: {traceback.format_exc()}")
+            logger.error(f"Erro inesperado durante o ciclo: {traceback.format_exc()}")
             raise  # Re-lançar exceção para facilitar a depuração
         finally:
             self.log_mensagem("Ciclo finalizado.")
@@ -354,7 +398,7 @@ class BotMartingaleApp:
             self.CICLO_ATIVO = False
             self.root.after(0, lambda: self.button_iniciar.config(state=tk.NORMAL))
             self.root.after(0, lambda: self.button_encerrar.config(state=tk.DISABLED))
-            logging.info("Ciclo finalizado.")
+            logger.info("Ciclo finalizado.")
             # Mostrar mensagem ao finalizar ciclo
             messagebox.showinfo("Ciclo Finalizado", "O ciclo de negociação foi finalizado.")
 
@@ -417,7 +461,7 @@ class BotMartingaleApp:
             self.atualizar_status("Ciclo interrompido.", "red")
             self.button_iniciar.config(state=tk.NORMAL)
             self.button_encerrar.config(state=tk.DISABLED)
-            logging.warning("Ciclo interrompido manualmente.")
+            logger.warning("Ciclo interrompido manualmente.")
 
 if __name__ == "__main__":
     root = tk.Tk()
