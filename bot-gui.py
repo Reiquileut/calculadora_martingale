@@ -5,301 +5,345 @@ from iqoptionapi.stable_api import IQ_Option
 from calculadora_martingale import calcular_martingale
 import time
 
-# Configurações Globais
-CICLO_ATIVO = False
-TIPO_CONTA = "PRACTICE"  # Conta padrão é demo PRACTICE ou REAL
-iq = None  # Variável global para o objeto IQ_Option
+# Classe que representa a aplicação
+class BotMartingaleApp:
+    def __init__(self, root):
+        self.root = root
+        self.root.title("Bot Martingale")
 
+        # Variáveis de controle
+        self.CICLO_ATIVO = False
+        self.TIPO_CONTA = "PRACTICE"
+        self.iq = None
 
-def conectar(email, senha):
-    """Conecta à IQ Option com as credenciais fornecidas pelo usuário."""
-    global iq
-    iq = IQ_Option(email, senha)
-    status, reason = iq.connect()
-    if status:
-        iq.change_balance(TIPO_CONTA)  # Define o tipo de conta
-        log_mensagem("Conexão bem-sucedida!")
-        saldo = obter_saldo_disponivel()
-        atualizar_saldo(saldo)
-        atualizar_conta("Demo" if TIPO_CONTA == "PRACTICE" else "Real")
-        atualizar_status("Conectado com sucesso!", "green")
-    else:
-        messagebox.showerror("Erro de Login", f"Falha na conexão: {reason}")
-        iq = None
-        atualizar_status("Erro ao conectar.", "red")
+        # Configuração da interface
+        self.setup_gui()
 
+    def setup_gui(self):
+        """Configura os elementos da interface gráfica."""
+        # Campos de Login
+        tk.Label(self.root, text="E-mail:").grid(row=0, column=0, sticky="e")
+        self.entry_email = tk.Entry(self.root)
+        self.entry_email.grid(row=0, column=1, columnspan=2, sticky="we")
 
-def alterar_tipo_conta(tipo):
-    """Altera o tipo de conta (demo ou real)."""
-    global TIPO_CONTA
-    if iq is None:
-        messagebox.showerror("Erro", "Faça login antes de alterar o tipo de conta.")
-        return
+        tk.Label(self.root, text="Senha:").grid(row=1, column=0, sticky="e")
+        self.entry_senha = tk.Entry(self.root, show="*")
+        self.entry_senha.grid(row=1, column=1, columnspan=2, sticky="we")
 
-    TIPO_CONTA = tipo
-    iq.change_balance(TIPO_CONTA)  # Altera o tipo de conta
-    saldo = obter_saldo_disponivel()
-    atualizar_saldo(saldo)
-    atualizar_conta("Demo" if tipo == "PRACTICE" else "Real")
-    log_mensagem(f"Conta alterada para: {'Demo' if tipo == 'PRACTICE' else 'Real'} | Saldo: R$ {saldo:.2f}")
+        tk.Button(self.root, text="Login", command=self.fazer_login).grid(row=2, column=0, columnspan=3, pady=5)
 
+        # Separador
+        tk.Label(self.root, text="").grid(row=3, column=0)
 
-def verificar_ativo(ativo):
-    """Verifica se o ativo está disponível para operações."""
-    if iq is None:
-        return False
-    open_time = iq.get_all_open_time()
-    if ativo in open_time["digital"] and open_time["digital"][ativo]["open"]:
-        return True
-    else:
-        return False
+        # Campos de Configuração
+        tk.Label(self.root, text="Ativo:").grid(row=4, column=0, sticky="e")
+        self.entry_ativo = tk.Entry(self.root)
+        self.entry_ativo.grid(row=4, column=1, sticky="we")
 
+        tk.Label(self.root, text="Payout (%):").grid(row=5, column=0, sticky="e")
+        self.entry_payout = tk.Entry(self.root)
+        self.entry_payout.grid(row=5, column=1, sticky="we")
 
-def sincronizar_com_candle():
-    """Sincroniza com o início do próximo candle."""
-    tempo_atual = time.time()
-    proximo_candle = tempo_atual + (60 - (tempo_atual % 60))
+        tk.Label(self.root, text="Valor Inicial:").grid(row=6, column=0, sticky="e")
+        self.entry_valor_inicial = tk.Entry(self.root)
+        self.entry_valor_inicial.grid(row=6, column=1, sticky="we")
 
-    while time.time() < proximo_candle:
-        if not CICLO_ATIVO:
-            return  # Interrompe imediatamente se o ciclo foi encerrado
-        time.sleep(0.1)  # Evita sobrecarregar a CPU
+        tk.Label(self.root, text="Direção:").grid(row=7, column=0, sticky="e")
+        self.var_direcao = tk.StringVar(value="call")
+        tk.Radiobutton(self.root, text="Compra", variable=self.var_direcao, value="call").grid(row=7, column=1, sticky="w")
+        tk.Radiobutton(self.root, text="Venda", variable=self.var_direcao, value="put").grid(row=7, column=2, sticky="w")
 
+        # Botões de Controle
+        self.button_iniciar = tk.Button(self.root, text="Iniciar Ciclo", command=self.iniciar_ciclo)
+        self.button_iniciar.grid(row=8, column=0, pady=5)
+        self.button_encerrar = tk.Button(self.root, text="Encerrar Ciclo", command=self.encerrar_ciclo, state=tk.DISABLED)
+        self.button_encerrar.grid(row=8, column=1, pady=5)
 
-def obter_saldo_disponivel():
-    """Obtém o saldo disponível da conta atual."""
-    if iq is None:
-        return 0.0
-    saldo = iq.get_balance()
-    log_mensagem(f"Saldo atualizado: R$ {saldo:.2f}")
-    return saldo
+        # Seleção de Tipo de Conta
+        tk.Label(self.root, text="Tipo de Conta:").grid(row=9, column=0, sticky="e")
+        self.var_tipo_conta = tk.StringVar(value="PRACTICE")
+        self.radio_demo = tk.Radiobutton(self.root, text="Demo", variable=self.var_tipo_conta, value="PRACTICE", command=self.alterar_tipo_conta, state=tk.DISABLED)
+        self.radio_demo.grid(row=9, column=1, sticky="w")
+        self.radio_real = tk.Radiobutton(self.root, text="Real", variable=self.var_tipo_conta, value="REAL", command=self.alterar_tipo_conta, state=tk.DISABLED)
+        self.radio_real.grid(row=9, column=2, sticky="w")
 
+        # Exibição de Saldo e Conta
+        tk.Label(self.root, text="Saldo Atual:").grid(row=10, column=0, sticky="e")
+        self.label_saldo = tk.Label(self.root, text="R$ 0.00")
+        self.label_saldo.grid(row=10, column=1, sticky="w")
 
-def log_mensagem(msg):
-    """Exibe logs na GUI de forma segura (thread-safe)."""
-    def _log():
-        text_log.insert(tk.END, f"{msg}\n")
-        text_log.see(tk.END)
-    root.after(0, _log)
+        tk.Label(self.root, text="Conta Atual:").grid(row=11, column=0, sticky="e")
+        self.label_conta = tk.Label(self.root, text="Demo")
+        self.label_conta.grid(row=11, column=1, sticky="w")
 
+        # Área de Logs
+        tk.Label(self.root, text="Logs:").grid(row=12, column=0, sticky="nw")
+        self.text_log = tk.Text(self.root, height=10, width=50)
+        self.text_log.grid(row=12, column=1, columnspan=2, sticky="we")
 
-def atualizar_status(mensagem, cor="black"):
-    """Atualiza o status exibido na interface de forma segura."""
-    def _atualizar():
-        label_status.config(text=mensagem, fg=cor)
-    root.after(0, _atualizar)
+        # Status do Ciclo
+        tk.Label(self.root, text="Status do Ciclo:").grid(row=13, column=0, sticky="e")
+        self.label_status = tk.Label(self.root, text="Aguardando ação...", fg="black")
+        self.label_status.grid(row=13, column=1, columnspan=2, sticky="w")
 
+        # Ajuste de Layout
+        for i in range(14):
+            self.root.grid_rowconfigure(i, pad=5)
+        for i in range(3):
+            self.root.grid_columnconfigure(i, pad=5)
 
-def atualizar_saldo(saldo):
-    """Atualiza o saldo exibido na interface de forma segura."""
-    def _atualizar():
-        label_saldo.config(text=f"R$ {saldo:.2f}")
-    root.after(0, _atualizar)
+    def fazer_login(self):
+        """Realiza o login na plataforma IQ Option."""
+        email = self.entry_email.get().strip()
+        senha = self.entry_senha.get().strip()
 
-
-def atualizar_conta(tipo):
-    """Atualiza o tipo de conta exibido na interface de forma segura."""
-    def _atualizar():
-        label_conta.config(text=tipo)
-    root.after(0, _atualizar)
-
-
-def executar_ciclo(ativo, payout, direcao_inicial, valor_inicial):
-    """Executa as operações conforme a sequência calculada."""
-    global CICLO_ATIVO
-    CICLO_ATIVO = True
-
-    try:
-        sequencia, acoes = calcular_martingale(valor_inicial, payout, direcao_inicial)
-    except ValueError as e:
-        log_mensagem(f"Erro: {e}")
-        atualizar_status("Erro ao calcular Martingale.", "red")
-        CICLO_ATIVO = False
-        root.after(0, lambda: button_iniciar.config(state=tk.NORMAL))  # Reativar o botão
-        return
-
-    log_mensagem(f"Iniciando ciclo para o ativo {ativo} | Direção inicial: {direcao_inicial} | Payout: {payout}%")
-    atualizar_status("Executando ciclo...", "blue")
-
-    try:
-        sincronizar_com_candle()
-        if not CICLO_ATIVO:
-            log_mensagem("Ciclo interrompido antes da primeira ordem.")
-            atualizar_status("Ciclo interrompido antes da execução.", "red")
+        if not email or not senha:
+            messagebox.showerror("Erro de Login", "Por favor, preencha o e-mail e a senha.")
             return
 
-        saldo_disponivel = obter_saldo_disponivel()
-        atualizar_saldo(saldo_disponivel)
-        if saldo_disponivel < valor_inicial:
-            log_mensagem(f"Saldo insuficiente. Saldo disponível: R$ {saldo_disponivel:.2f}")
-            atualizar_status("Saldo insuficiente.", "red")
-            return
+        self.atualizar_status("Conectando...", "blue")
+        threading.Thread(target=self.conectar, args=(email, senha)).start()
 
-        direcao_execucao = "call" if direcao_inicial == "call" else "put"
-        status, _ = iq.buy_digital_spot(ativo, valor_inicial, direcao_execucao, 1)
-
+    def conectar(self, email, senha):
+        """Conecta à IQ Option e atualiza a interface."""
+        self.iq = IQ_Option(email, senha)
+        status, reason = self.iq.connect()
         if status:
-            log_mensagem(f"Primeira ordem executada: {direcao_execucao} | Valor: R$ {valor_inicial:.2f}")
+            self.iq.change_balance(self.TIPO_CONTA)
+            self.log_mensagem("Conexão bem-sucedida!")
+            saldo = self.obter_saldo_disponivel()
+            self.atualizar_saldo(saldo)
+            self.atualizar_conta("Demo" if self.TIPO_CONTA == "PRACTICE" else "Real")
+            self.atualizar_status("Conectado com sucesso!", "green")
+            # Habilitar botões após login
+            self.root.after(0, lambda: self.radio_demo.config(state=tk.NORMAL))
+            self.root.after(0, lambda: self.radio_real.config(state=tk.NORMAL))
         else:
-            log_mensagem(f"Erro ao executar a primeira ordem de valor R$ {valor_inicial:.2f}. Encerrando ciclo.")
-            atualizar_status("Erro na execução da primeira ordem.", "red")
+            self.iq = None
+            self.atualizar_status("Erro ao conectar.", "red")
+            self.log_mensagem(f"Falha na conexão: {reason}")
+            messagebox.showerror("Erro de Login", f"Falha na conexão: {reason}")
+
+    def alterar_tipo_conta(self):
+        """Altera o tipo de conta (Demo ou Real)."""
+        if self.iq is None:
+            messagebox.showerror("Erro", "Faça login antes de alterar o tipo de conta.")
             return
 
-        for index, (acao, valor) in enumerate(zip(acoes, sequencia)):
-            if not CICLO_ATIVO:
-                log_mensagem("Ciclo interrompido manualmente durante a execução.")
-                atualizar_status("Ciclo interrompido.", "red")
-                break
+        novo_tipo = self.var_tipo_conta.get()
+        if novo_tipo == self.TIPO_CONTA:
+            return  # Não há mudança
 
-            sincronizar_com_candle()
-            if not CICLO_ATIVO:
-                break
+        if novo_tipo == "REAL":
+            resposta = messagebox.askyesno("Confirmação", "Você tem certeza que deseja operar em conta REAL?")
+            if not resposta:
+                self.var_tipo_conta.set("PRACTICE")
+                return
 
-            saldo_disponivel = obter_saldo_disponivel()
-            atualizar_saldo(saldo_disponivel)
-            if saldo_disponivel < valor:
-                log_mensagem(f"Saldo insuficiente para a ordem {index + 2}. Saldo disponível: R$ {saldo_disponivel:.2f}")
-                atualizar_status("Saldo insuficiente para sequência.", "red")
-                break
+        self.TIPO_CONTA = novo_tipo
+        self.iq.change_balance(self.TIPO_CONTA)
+        saldo = self.obter_saldo_disponivel()
+        self.atualizar_saldo(saldo)
+        self.atualizar_conta("Demo" if self.TIPO_CONTA == "PRACTICE" else "Real")
+        self.log_mensagem(f"Conta alterada para: {'Demo' if self.TIPO_CONTA == 'PRACTICE' else 'Real'} | Saldo: R$ {saldo:.2f}")
 
-            direcao_execucao = "call" if acao == "C" else "put"
-            status, _ = iq.buy_digital_spot(ativo, valor, direcao_execucao, 1)
+    def verificar_ativo(self, ativo):
+        """Verifica se o ativo está disponível para operações digitais."""
+        if self.iq is None:
+            return False
+        open_time = self.iq.get_all_open_time()
+        return ativo in open_time["digital"] and open_time["digital"][ativo]["open"]
+
+    def sincronizar_com_candle(self):
+        """Sincroniza com o início do próximo candle."""
+        tempo_atual = time.time()
+        proximo_candle = tempo_atual + (60 - (tempo_atual % 60))
+
+        while time.time() < proximo_candle:
+            if not self.CICLO_ATIVO:
+                return
+            time.sleep(0.1)
+
+    def obter_saldo_disponivel(self):
+        """Obtém o saldo disponível da conta atual."""
+        if self.iq is None:
+            return 0.0
+        saldo = self.iq.get_balance()
+        self.log_mensagem(f"Saldo atualizado: R$ {saldo:.2f}")
+        return saldo
+
+    def log_mensagem(self, msg):
+        """Exibe logs na GUI de forma segura."""
+        def _log():
+            self.text_log.insert(tk.END, f"{msg}\n")
+            self.text_log.see(tk.END)
+        self.root.after(0, _log)
+
+    def atualizar_status(self, mensagem, cor="black"):
+        """Atualiza o status exibido na interface."""
+        def _atualizar():
+            self.label_status.config(text=mensagem, fg=cor)
+        self.root.after(0, _atualizar)
+
+    def atualizar_saldo(self, saldo):
+        """Atualiza o saldo exibido na interface."""
+        def _atualizar():
+            self.label_saldo.config(text=f"R$ {saldo:.2f}")
+        self.root.after(0, _atualizar)
+
+    def atualizar_conta(self, tipo):
+        """Atualiza o tipo de conta exibido na interface."""
+        def _atualizar():
+            self.label_conta.config(text=tipo)
+        self.root.after(0, _atualizar)
+
+    def executar_ciclo(self, ativo, payout, direcao_inicial, valor_inicial):
+        """Executa as operações conforme a sequência calculada."""
+        self.CICLO_ATIVO = True
+        self.root.after(0, lambda: self.button_encerrar.config(state=tk.NORMAL))
+
+        try:
+            sequencia, acoes = calcular_martingale(valor_inicial, payout, direcao_inicial)
+        except ValueError as e:
+            self.log_mensagem(f"Erro: {e}")
+            self.atualizar_status("Erro ao calcular Martingale.", "red")
+            self.CICLO_ATIVO = False
+            self.root.after(0, lambda: self.button_iniciar.config(state=tk.NORMAL))
+            self.root.after(0, lambda: self.button_encerrar.config(state=tk.DISABLED))
+            return
+
+        self.log_mensagem(f"Iniciando ciclo para o ativo {ativo} | Direção inicial: {direcao_inicial} | Payout: {payout}%")
+        self.atualizar_status("Executando ciclo...", "blue")
+
+        try:
+            self.sincronizar_com_candle()
+            if not self.CICLO_ATIVO:
+                self.log_mensagem("Ciclo interrompido antes da primeira ordem.")
+                self.atualizar_status("Ciclo interrompido antes da execução.", "red")
+                return
+
+            saldo_disponivel = self.obter_saldo_disponivel()
+            self.atualizar_saldo(saldo_disponivel)
+            if saldo_disponivel < valor_inicial:
+                self.log_mensagem(f"Saldo insuficiente. Saldo disponível: R$ {saldo_disponivel:.2f}")
+                self.atualizar_status("Saldo insuficiente.", "red")
+                return
+
+            direcao_execucao = "call" if direcao_inicial == "call" else "put"
+            status, _ = self.iq.buy_digital_spot(ativo, valor_inicial, direcao_execucao, 1)
 
             if status:
-                log_mensagem(f"Ordem {index + 2} executada: {direcao_execucao} | Valor: R$ {valor:.2f}")
+                self.log_mensagem(f"Primeira ordem executada: {direcao_execucao} | Valor: R$ {valor_inicial:.2f}")
             else:
-                log_mensagem(f"Erro ao executar ordem de valor R$ {valor:.2f}. Encerrando ciclo.")
-                atualizar_status("Erro na execução de uma ordem.", "red")
-                break
+                self.log_mensagem(f"Erro ao executar a primeira ordem de valor R$ {valor_inicial:.2f}. Encerrando ciclo.")
+                self.atualizar_status("Erro na execução da primeira ordem.", "red")
+                return
 
-    except Exception as e:
-        log_mensagem(f"Erro inesperado durante o ciclo: {e}")
-        atualizar_status("Erro inesperado durante o ciclo.", "red")
-    finally:
-        log_mensagem("Ciclo finalizado.")
-        atualizar_status("Ciclo finalizado com sucesso.", "green")
-        CICLO_ATIVO = False
-        root.after(0, lambda: button_iniciar.config(state=tk.NORMAL))  # Reativar o botão
+            for index, (acao, valor) in enumerate(zip(acoes, sequencia)):
+                if not self.CICLO_ATIVO:
+                    self.log_mensagem("Ciclo interrompido manualmente durante a execução.")
+                    self.atualizar_status("Ciclo interrompido.", "red")
+                    break
 
+                self.sincronizar_com_candle()
+                if not self.CICLO_ATIVO:
+                    break
 
-def iniciar_ciclo():
-    """Inicia o ciclo a partir da GUI."""
-    global CICLO_ATIVO
-    if CICLO_ATIVO:
-        messagebox.showwarning("Aviso", "Já existe um ciclo em execução.")
-        return
+                saldo_disponivel = self.obter_saldo_disponivel()
+                self.atualizar_saldo(saldo_disponivel)
+                if saldo_disponivel < valor:
+                    self.log_mensagem(f"Saldo insuficiente para a ordem {index + 2}. Saldo disponível: R$ {saldo_disponivel:.2f}")
+                    self.atualizar_status("Saldo insuficiente para sequência.", "red")
+                    break
 
-    ativo = entry_ativo.get().strip()
-    if not ativo:
-        messagebox.showerror("Erro", "O campo 'Ativo' não pode estar vazio.")
-        return
+                direcao_execucao = "call" if acao == "C" else "put"
+                status, _ = self.iq.buy_digital_spot(ativo, valor, direcao_execucao, 1)
 
-    try:
-        payout = float(entry_payout.get())
-        if payout <= 0 or payout > 100:
-            messagebox.showerror("Erro", "Payout deve estar entre 0% e 100%.")
+                if status:
+                    self.log_mensagem(f"Ordem {index + 2} executada: {direcao_execucao} | Valor: R$ {valor:.2f}")
+                else:
+                    self.log_mensagem(f"Erro ao executar ordem de valor R$ {valor:.2f}. Encerrando ciclo.")
+                    self.atualizar_status("Erro na execução de uma ordem.", "red")
+                    break
+
+            # Atualizar saldo após o ciclo
+            saldo_final = self.obter_saldo_disponivel()
+            self.atualizar_saldo(saldo_final)
+
+        except Exception as e:
+            self.log_mensagem(f"Erro inesperado durante o ciclo: {e}")
+            self.atualizar_status("Erro inesperado durante o ciclo.", "red")
+        finally:
+            self.log_mensagem("Ciclo finalizado.")
+            self.atualizar_status("Ciclo finalizado.", "green")
+            self.CICLO_ATIVO = False
+            self.root.after(0, lambda: self.button_iniciar.config(state=tk.NORMAL))
+            self.root.after(0, lambda: self.button_encerrar.config(state=tk.DISABLED))
+
+    def iniciar_ciclo(self):
+        """Inicia o ciclo de negociação."""
+        if self.CICLO_ATIVO:
+            messagebox.showwarning("Aviso", "Já existe um ciclo em execução.")
             return
-    except ValueError:
-        messagebox.showerror("Erro", "Insira um valor numérico válido para o payout.")
-        return
 
-    try:
-        valor_inicial = float(entry_valor_inicial.get())
-        if valor_inicial <= 0:
-            messagebox.showerror("Erro", "O valor inicial deve ser maior que zero.")
+        if self.iq is None:
+            messagebox.showerror("Erro", "Você precisa estar conectado para iniciar um ciclo.")
             return
-    except ValueError:
-        messagebox.showerror("Erro", "Insira um valor numérico válido para o valor inicial.")
-        return
 
-    direcao = var_direcao.get()
-    if direcao not in ["call", "put"]:
-        messagebox.showerror("Erro", "Selecione uma direção válida (Compra ou Venda).")
-        return
+        ativo = self.entry_ativo.get().strip().upper()
+        if not ativo:
+            messagebox.showerror("Erro", "O campo 'Ativo' não pode estar vazio.")
+            return
 
-    if not verificar_ativo(ativo):
-        messagebox.showerror("Erro", f"O ativo '{ativo}' não está disponível para operações no momento.")
-        return
+        try:
+            payout = float(self.entry_payout.get())
+            if payout <= 0 or payout > 100:
+                raise ValueError
+        except ValueError:
+            messagebox.showerror("Erro", "Payout deve ser um número entre 0 e 100.")
+            return
 
-    log_mensagem(f"Iniciando ciclo para o ativo {ativo} com payout {payout} e direção inicial {direcao}.")
-    atualizar_status("Preparando para executar ciclo...", "blue")
+        try:
+            valor_inicial = float(self.entry_valor_inicial.get())
+            if valor_inicial <= 0:
+                raise ValueError
+        except ValueError:
+            messagebox.showerror("Erro", "Valor inicial deve ser um número positivo.")
+            return
 
-    # Desativar botão durante a execução
-    button_iniciar.config(state=tk.DISABLED)
+        direcao = self.var_direcao.get()
+        if direcao not in ["call", "put"]:
+            messagebox.showerror("Erro", "Selecione uma direção válida (Compra ou Venda).")
+            return
 
-    # Inicia o ciclo em uma nova thread
-    thread = threading.Thread(target=executar_ciclo, args=(ativo, payout, direcao, valor_inicial))
-    thread.daemon = True
-    thread.start()
+        if not self.verificar_ativo(ativo):
+            messagebox.showerror("Erro", f"O ativo '{ativo}' não está disponível para operações no momento.")
+            return
 
+        self.log_mensagem(f"Iniciando ciclo para o ativo {ativo} com payout {payout}% e direção inicial {direcao}.")
+        self.atualizar_status("Preparando para executar ciclo...", "blue")
 
-def encerrar_ciclo():
-    """Encerra o ciclo manualmente."""
-    global CICLO_ATIVO
-    CICLO_ATIVO = False
-    log_mensagem("Ciclo interrompido manualmente.")
-    atualizar_status("Ciclo interrompido.", "red")
-    button_iniciar.config(state=tk.NORMAL)  # Reativar o botão
+        # Desativar botões durante a execução
+        self.button_iniciar.config(state=tk.DISABLED)
 
+        # Inicia o ciclo em uma nova thread
+        threading.Thread(target=self.executar_ciclo, args=(ativo, payout, direcao, valor_inicial)).start()
 
-# Interface Gráfica
-root = tk.Tk()
-root.title("Bot Martingale")
+    def encerrar_ciclo(self):
+        """Encerra o ciclo de negociação."""
+        if not self.CICLO_ATIVO:
+            messagebox.showinfo("Informação", "Nenhum ciclo está em execução no momento.")
+            return
 
-# Campos de Login
-tk.Label(root, text="E-mail:").grid(row=0, column=0)
-entry_email = tk.Entry(root)
-entry_email.grid(row=0, column=1, columnspan=2)
+        resposta = messagebox.askyesno("Confirmação", "Tem certeza que deseja encerrar o ciclo?")
+        if resposta:
+            self.CICLO_ATIVO = False
+            self.log_mensagem("Ciclo interrompido manualmente.")
+            self.atualizar_status("Ciclo interrompido.", "red")
+            self.button_iniciar.config(state=tk.NORMAL)
+            self.button_encerrar.config(state=tk.DISABLED)
 
-tk.Label(root, text="Senha:").grid(row=1, column=0)
-entry_senha = tk.Entry(root, show="*")  # Oculta o texto da senha
-entry_senha.grid(row=1, column=1, columnspan=2)
-
-tk.Button(root, text="Login", command=lambda: conectar(entry_email.get(), entry_senha.get())).grid(row=2, column=0, columnspan=3)
-
-# Campos da GUI
-tk.Label(root, text="Ativo:").grid(row=3, column=0)
-entry_ativo = tk.Entry(root)
-entry_ativo.grid(row=3, column=1)
-
-tk.Label(root, text="Payout (%):").grid(row=4, column=0)
-entry_payout = tk.Entry(root)
-entry_payout.grid(row=4, column=1)
-
-tk.Label(root, text="Valor Inicial:").grid(row=5, column=0)
-entry_valor_inicial = tk.Entry(root)
-entry_valor_inicial.grid(row=5, column=1)
-
-var_direcao = tk.StringVar(value="call")
-tk.Radiobutton(root, text="Compra", variable=var_direcao, value="call").grid(row=6, column=0)
-tk.Radiobutton(root, text="Venda", variable=var_direcao, value="put").grid(row=6, column=1)
-
-button_iniciar = tk.Button(root, text="Iniciar Ciclo", command=iniciar_ciclo)
-button_iniciar.grid(row=7, column=0)
-tk.Button(root, text="Encerrar Ciclo", command=encerrar_ciclo).grid(row=7, column=1)
-
-# Seleção de tipo de conta
-tk.Label(root, text="Tipo de Conta:").grid(row=8, column=0)
-var_tipo_conta = tk.StringVar(value="PRACTICE")
-tk.Radiobutton(root, text="Demo", variable=var_tipo_conta, value="PRACTICE", command=lambda: alterar_tipo_conta("PRACTICE")).grid(row=8, column=1)
-tk.Radiobutton(root, text="Real", variable=var_tipo_conta, value="REAL", command=lambda: alterar_tipo_conta("REAL")).grid(row=8, column=2)
-
-# Exibição de saldo e tipo de conta
-tk.Label(root, text="Saldo Atual:").grid(row=9, column=0)
-label_saldo = tk.Label(root, text="R$ 0.00")
-label_saldo.grid(row=9, column=1)
-
-tk.Label(root, text="Conta Atual:").grid(row=10, column=0)
-label_conta = tk.Label(root, text="Demo")
-label_conta.grid(row=10, column=1)
-
-# Logs na parte inferior
-text_log = tk.Text(root, height=10, width=50)
-text_log.grid(row=11, column=0, columnspan=3)
-
-# Status do ciclo
-tk.Label(root, text="Status do Ciclo:").grid(row=12, column=0)
-label_status = tk.Label(root, text="Aguardando ação...", fg="black")
-label_status.grid(row=12, column=1, columnspan=2)
-
-root.mainloop()
+if __name__ == "__main__":
+    root = tk.Tk()
+    app = BotMartingaleApp(root)
+    root.mainloop()

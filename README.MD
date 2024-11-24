@@ -1,6 +1,22 @@
 # Bot Martingale para IQ Option
 
-Este projeto é um bot automatizado para realizar operações na IQ Option utilizando a estratégia de **Martingale**. Ele conta com uma interface gráfica (GUI) que permite login, seleção de conta e gerenciamento visual do saldo.
+[![MIT License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+
+Este projeto é um bot automatizado para realizar operações na **IQ Option** utilizando a estratégia de **Martingale**. Ele possui uma interface gráfica (GUI) que permite login, seleção de conta e gerenciamento visual do saldo.
+
+## Sumário
+
+- [Funcionalidades](#funcionalidades)
+- [Pré-requisitos](#pré-requisitos)
+- [Instalação](#instalação)
+- [Como Usar](#como-usar)
+- [Estrutura do Projeto](#estrutura-do-projeto)
+- [Funcionalidades da Interface](#funcionalidades-da-interface)
+- [Contribuições](#contribuições)
+- [Licença](#licença)
+- [Suporte](#suporte)
+- [Aviso Legal](#aviso-legal)
+- [Créditos](#créditos)
 
 ## Funcionalidades
 
@@ -10,22 +26,19 @@ Este projeto é um bot automatizado para realizar operações na IQ Option utili
 - **Sincronização com Candles**: Garante que as operações sejam realizadas no início de cada candle.
 - **Logs Detalhados**: Acompanhe o progresso e possíveis erros diretamente na interface.
 
-## Requisitos
+## Pré-requisitos
 
-Certifique-se de instalar as dependências listadas no arquivo `requirements.txt`. Use o seguinte comando para instalar:
+- **Python 3.x**
+- **Bibliotecas Python**: listadas em `requirements.txt`
+
+## Instalação
+
+Clone o repositório e instale as dependências:
 
 ```bash
+git clone https://github.com/seu-usuario/seu-repositorio.git
+cd seu-repositorio
 pip install -r requirements.txt
-
-Estrutura do Projeto
-
-.
-├── bot-gui.py                # Interface principal do bot
-├── calculadora_martingale.py # Cálculos relacionados à estratégia de Martingale
-├── catalogador.py            # Análise de dados históricos de candles
-├── get-ativos.py             # Listagem de ativos disponíveis na IQ Option
-├── README.md                 # Documentação do projeto
-├── requirements.txt          # Dependências do projeto
 
 Como Usar
 
@@ -36,7 +49,7 @@ python bot-gui.py
 
 
 	2.	Faça Login:
-	•	Insira seu e-mail e senha no campo correspondente.
+	•	Insira seu e-mail e senha nos campos correspondentes.
 	•	Clique em Login. O saldo será exibido na interface após a conexão.
 	3.	Configure a Operação:
 	•	Preencha os campos:
@@ -51,6 +64,17 @@ python bot-gui.py
 	•	Acompanhe os logs para monitorar o progresso.
 	6.	Interrompa o Ciclo (se necessário):
 	•	Clique em Encerrar Ciclo para parar manualmente as operações.
+
+Estrutura do Projeto
+
+.
+├── bot-gui.py                # Interface principal do bot
+├── calculadora_martingale.py # Cálculos relacionados à estratégia de Martingale
+├── catalogador.py            # Análise de dados históricos de candles
+├── get-ativos.py             # Listagem de ativos disponíveis na IQ Option
+├── README.md                 # Documentação do projeto
+├── requirements.txt          # Dependências do projeto
+└── LICENSE                   # Licença do projeto
 
 Funcionalidades da Interface
 
@@ -79,11 +103,27 @@ Contribuições
 
 Contribuições são bem-vindas! Para colaborar:
 	1.	Faça um fork deste repositório.
-	2.	Crie uma branch para sua funcionalidade: git checkout -b minha-funcionalidade.
-	3.	Envie seu PR para revisão.
+	2.	Crie uma branch para sua funcionalidade:
+
+git checkout -b minha-funcionalidade
+
+
+	3.	Envie seu Pull Request para revisão.
 
 Licença
 
 Este projeto é licenciado sob a MIT License.
 
-Atenção: Use este bot de forma responsável. A negociação na IQ Option envolve risco, e você pode perder todo o capital investido.
+Suporte
+
+Se você tiver alguma dúvida ou encontrar problemas, por favor, abra uma issue no GitHub ou entre em contato pelo e-mail: thiagosoteroprado@gmail.com .
+
+Aviso Legal
+
+Atenção: Use este bot de forma responsável. A negociação na IQ Option envolve riscos significativos, e você pode perder todo o capital investido. Certifique-se de compreender os riscos e pratique sempre em uma conta demo antes de utilizar fundos reais.
+
+Créditos
+
+	•	Desenvolvido por Thiago Prado.
+	•	Agradecimentos especiais às bibliotecas de código aberto utilizadas neste projeto.
+
