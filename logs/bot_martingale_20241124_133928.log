@@ -1,0 +1,55 @@
+2024-11-24 13:39:28,597 - INFO - Conexão bem-sucedida!
+2024-11-24 13:39:28,837 - INFO - Saldo atualizado: R$ 9338.51
+2024-11-24 13:39:28,837 - INFO - Saldo atualizado: R$ 9338.51
+2024-11-24 13:39:28,842 - INFO - Usuário conectado com sucesso.
+2024-11-24 13:39:45,679 - INFO - Iniciando ciclo para o ativo EURUSD-OTC com payout 89.0% e direção inicial call.
+2024-11-24 13:39:45,686 - INFO - Iniciando ciclo para o ativo EURUSD-OTC | Direção inicial: call | Payout: 89.0%
+2024-11-24 13:39:45,687 - INFO - Iniciando ciclo para o ativo EURUSD-OTC.
+2024-11-24 13:40:00,338 - INFO - Saldo atualizado: R$ 9338.51
+2024-11-24 13:40:00,338 - INFO - Saldo atualizado: R$ 9338.51
+2024-11-24 13:40:02,132 - INFO - Primeira ordem executada: call | Valor: R$ 2.00
+2024-11-24 13:40:02,132 - INFO - Primeira ordem executada: call | Valor: R$ 2.00
+2024-11-24 13:40:19,332 - INFO - Saldo atualizado: R$ 0.39
+2024-11-24 13:40:19,334 - INFO - Saldo atualizado: R$ 0.39
+2024-11-24 13:40:19,334 - INFO - Conta alterada para: Real | Saldo: R$ 0.39
+2024-11-24 13:40:19,334 - INFO - Tipo de conta alterado para REAL.
+2024-11-24 13:40:23,483 - INFO - Ciclo interrompido manualmente.
+2024-11-24 13:40:23,484 - WARNING - Ciclo interrompido manualmente.
+2024-11-24 13:40:23,761 - INFO - Saldo atualizado: R$ 0.39
+2024-11-24 13:40:23,761 - INFO - Saldo atualizado: R$ 0.39
+2024-11-24 13:40:23,766 - INFO - Ciclo finalizado.
+2024-11-24 13:40:23,766 - INFO - Ciclo finalizado.
+2024-11-24 13:40:26,362 - INFO - Saldo atualizado: R$ 9336.51
+2024-11-24 13:40:26,362 - INFO - Saldo atualizado: R$ 9336.51
+2024-11-24 13:40:26,362 - INFO - Conta alterada para: Demo | Saldo: R$ 9336.51
+2024-11-24 13:40:26,362 - INFO - Tipo de conta alterado para PRACTICE.
+2024-11-24 13:40:34,311 - INFO - Iniciando ciclo para o ativo EURUSD-OTC com payout 89.0% e direção inicial call.
+2024-11-24 13:40:34,313 - INFO - Iniciando ciclo para o ativo EURUSD-OTC | Direção inicial: call | Payout: 89.0%
+2024-11-24 13:40:34,317 - INFO - Iniciando ciclo para o ativo EURUSD-OTC.
+2024-11-24 13:41:00,304 - INFO - Saldo atualizado: R$ 9336.51
+2024-11-24 13:41:00,304 - INFO - Saldo atualizado: R$ 9336.51
+2024-11-24 13:41:01,370 - INFO - Primeira ordem executada: call | Valor: R$ 2.00
+2024-11-24 13:41:01,370 - INFO - Primeira ordem executada: call | Valor: R$ 2.00
+2024-11-24 13:42:00,282 - INFO - Saldo atualizado: R$ 9338.29
+2024-11-24 13:42:00,283 - INFO - Saldo atualizado: R$ 9338.29
+2024-11-24 13:42:01,442 - INFO - Ordem 2 executada: put | Valor: R$ 2.25
+2024-11-24 13:42:01,442 - INFO - Ordem 2 executada: put | Valor: R$ 2.25
+2024-11-24 13:43:00,287 - INFO - Saldo atualizado: R$ 9336.04
+2024-11-24 13:43:00,287 - INFO - Saldo atualizado: R$ 9336.04
+2024-11-24 13:43:01,223 - INFO - Ordem 3 executada: call | Valor: R$ 4.78
+2024-11-24 13:43:01,223 - INFO - Ordem 3 executada: call | Valor: R$ 4.78
+2024-11-24 13:44:00,318 - INFO - Saldo atualizado: R$ 9331.26
+2024-11-24 13:44:00,319 - INFO - Saldo atualizado: R$ 9331.26
+2024-11-24 13:44:01,557 - INFO - Ordem 4 executada: put | Valor: R$ 10.15
+2024-11-24 13:44:01,557 - INFO - Ordem 4 executada: put | Valor: R$ 10.15
+2024-11-24 13:45:00,229 - INFO - Saldo atualizado: R$ 9321.11
+2024-11-24 13:45:00,230 - INFO - Saldo atualizado: R$ 9321.11
+2024-11-24 13:45:01,467 - INFO - Ordem 5 executada: call | Valor: R$ 21.55
+2024-11-24 13:45:01,467 - INFO - Ordem 5 executada: call | Valor: R$ 21.55
+2024-11-24 13:46:00,370 - INFO - Saldo atualizado: R$ 9299.56
+2024-11-24 13:46:00,370 - INFO - Saldo atualizado: R$ 9299.56
+2024-11-24 13:46:01,468 - INFO - Ordem 6 executada: call | Valor: R$ 45.76
+2024-11-24 13:46:01,468 - INFO - Ordem 6 executada: call | Valor: R$ 45.76
+2024-11-24 13:47:55,991 - ERROR - Connection is already closed.
+2024-11-24 13:49:44,815 - INFO - Ciclo interrompido manualmente.
+2024-11-24 13:49:44,838 - WARNING - Ciclo interrompido manualmente.

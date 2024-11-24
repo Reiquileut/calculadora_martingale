@@ -52,6 +52,9 @@ class BotMartingaleApp:
         self.root = root
         self.root.title("Bot Martingale")
 
+        # Definir tamanho mínimo da janela
+        self.root.minsize(600, 500)
+
         # Variáveis de controle
         self.CICLO_ATIVO = False
         self.TIPO_CONTA = "PRACTICE"
@@ -64,84 +67,127 @@ class BotMartingaleApp:
         """Configura os elementos da interface gráfica."""
         # Estilos personalizados
         self.style = ttk.Style()
-        self.style.theme_use('default')
+        self.style.theme_use('clam')  # Você pode testar outros temas: 'default', 'alt', 'clam', 'vista', 'xpnative'
         self.style.configure('TButton', font=('Helvetica', 10))
         self.style.configure('TLabel', font=('Helvetica', 10))
         self.style.configure('TEntry', font=('Helvetica', 10))
+        self.style.configure('TRadiobutton', font=('Helvetica', 10))
+        self.style.configure('TFrame', background='#f0f0f0')
+
+        # Frame principal
+        self.main_frame = ttk.Frame(self.root, padding=(10, 10, 10, 10))
+        self.main_frame.pack(fill=tk.BOTH, expand=True)
+
+        # Configurar grid no frame principal
+        self.main_frame.columnconfigure(0, weight=1)
+        self.main_frame.columnconfigure(1, weight=1)
+        self.main_frame.columnconfigure(2, weight=1)
+        self.main_frame.rowconfigure(0, weight=0)
+        self.main_frame.rowconfigure(1, weight=0)
+        self.main_frame.rowconfigure(2, weight=0)
+        self.main_frame.rowconfigure(3, weight=0)
+        self.main_frame.rowconfigure(4, weight=0)
+        self.main_frame.rowconfigure(5, weight=0)
+        self.main_frame.rowconfigure(6, weight=0)
+        self.main_frame.rowconfigure(7, weight=0)
+        self.main_frame.rowconfigure(8, weight=1)  # Área de logs expande
+        self.main_frame.rowconfigure(9, weight=0)
 
         # Campos de Login
-        ttk.Label(self.root, text="E-mail:").grid(row=0, column=0, sticky="e")
-        self.entry_email = ttk.Entry(self.root)
-        self.entry_email.grid(row=0, column=1, columnspan=2, sticky="we")
+        login_frame = ttk.LabelFrame(self.main_frame, text="Login", padding=(10, 10))
+        login_frame.grid(row=0, column=0, columnspan=3, sticky="we", pady=(0, 10))
+        login_frame.columnconfigure(1, weight=1)
 
-        ttk.Label(self.root, text="Senha:").grid(row=1, column=0, sticky="e")
-        self.entry_senha = ttk.Entry(self.root, show="*")
-        self.entry_senha.grid(row=1, column=1, columnspan=2, sticky="we")
+        ttk.Label(login_frame, text="E-mail:").grid(row=0, column=0, sticky="e")
+        self.entry_email = ttk.Entry(login_frame)
+        self.entry_email.grid(row=0, column=1, sticky="we")
 
-        ttk.Button(self.root, text="Login", command=self.fazer_login).grid(row=2, column=0, columnspan=3, pady=5)
+        ttk.Label(login_frame, text="Senha:").grid(row=1, column=0, sticky="e")
+        self.entry_senha = ttk.Entry(login_frame, show="*")
+        self.entry_senha.grid(row=1, column=1, sticky="we")
+
+        ttk.Button(login_frame, text="Login", command=self.fazer_login).grid(row=0, column=2, rowspan=2, padx=(10, 0))
 
         # Separador
-        ttk.Separator(self.root, orient='horizontal').grid(row=3, column=0, columnspan=3, sticky="we", pady=5)
+        ttk.Separator(self.main_frame, orient='horizontal').grid(row=1, column=0, columnspan=3, sticky="we", pady=10)
 
         # Campos de Configuração
-        ttk.Label(self.root, text="Ativo:").grid(row=4, column=0, sticky="e")
-        self.entry_ativo = ttk.Entry(self.root)
-        self.entry_ativo.grid(row=4, column=1, sticky="we")
+        config_frame = ttk.LabelFrame(self.main_frame, text="Configurações da Operação", padding=(10, 10))
+        config_frame.grid(row=2, column=0, columnspan=3, sticky="we", pady=(0, 10))
+        config_frame.columnconfigure(1, weight=1)
+        config_frame.columnconfigure(2, weight=1)
 
-        ttk.Label(self.root, text="Payout (%):").grid(row=5, column=0, sticky="e")
-        self.entry_payout = ttk.Entry(self.root)
-        self.entry_payout.grid(row=5, column=1, sticky="we")
+        ttk.Label(config_frame, text="Ativo:").grid(row=0, column=0, sticky="e")
+        self.entry_ativo = ttk.Entry(config_frame)
+        self.entry_ativo.grid(row=0, column=1, sticky="we")
 
-        ttk.Label(self.root, text="Valor Inicial:").grid(row=6, column=0, sticky="e")
-        self.entry_valor_inicial = ttk.Entry(self.root)
-        self.entry_valor_inicial.grid(row=6, column=1, sticky="we")
+        ttk.Label(config_frame, text="Payout (%):").grid(row=1, column=0, sticky="e")
+        self.entry_payout = ttk.Entry(config_frame)
+        self.entry_payout.grid(row=1, column=1, sticky="we")
 
-        ttk.Label(self.root, text="Direção:").grid(row=7, column=0, sticky="e")
+        ttk.Label(config_frame, text="Valor Inicial:").grid(row=2, column=0, sticky="e")
+        self.entry_valor_inicial = ttk.Entry(config_frame)
+        self.entry_valor_inicial.grid(row=2, column=1, sticky="we")
+
+        ttk.Label(config_frame, text="Direção:").grid(row=3, column=0, sticky="e")
         self.var_direcao = tk.StringVar(value="call")
-        ttk.Radiobutton(self.root, text="Compra", variable=self.var_direcao, value="call").grid(row=7, column=1, sticky="w")
-        ttk.Radiobutton(self.root, text="Venda", variable=self.var_direcao, value="put").grid(row=7, column=2, sticky="w")
+        direcao_frame = ttk.Frame(config_frame)
+        direcao_frame.grid(row=3, column=1, sticky="w")
+        ttk.Radiobutton(direcao_frame, text="Compra", variable=self.var_direcao, value="call").pack(side=tk.LEFT)
+        ttk.Radiobutton(direcao_frame, text="Venda", variable=self.var_direcao, value="put").pack(side=tk.LEFT)
 
         # Botões de Controle
-        self.button_iniciar = ttk.Button(self.root, text="Iniciar Ciclo", command=self.iniciar_ciclo)
-        self.button_iniciar.grid(row=8, column=0, pady=5)
-        self.button_encerrar = ttk.Button(self.root, text="Encerrar Ciclo", command=self.encerrar_ciclo, state=tk.DISABLED)
-        self.button_encerrar.grid(row=8, column=1, pady=5)
+        controle_frame = ttk.Frame(self.main_frame)
+        controle_frame.grid(row=3, column=0, columnspan=3, pady=(0, 10))
+        self.button_iniciar = ttk.Button(controle_frame, text="Iniciar Ciclo", command=self.iniciar_ciclo)
+        self.button_iniciar.pack(side=tk.LEFT, padx=5)
+        self.button_encerrar = ttk.Button(controle_frame, text="Encerrar Ciclo", command=self.encerrar_ciclo, state=tk.DISABLED)
+        self.button_encerrar.pack(side=tk.LEFT, padx=5)
 
         # Seleção de Tipo de Conta
-        ttk.Label(self.root, text="Tipo de Conta:").grid(row=9, column=0, sticky="e")
+        conta_frame = ttk.LabelFrame(self.main_frame, text="Conta", padding=(10, 10))
+        conta_frame.grid(row=4, column=0, columnspan=3, sticky="we", pady=(0, 10))
+        conta_frame.columnconfigure(1, weight=1)
+
         self.var_tipo_conta = tk.StringVar(value="PRACTICE")
-        self.radio_demo = ttk.Radiobutton(self.root, text="Demo", variable=self.var_tipo_conta, value="PRACTICE", command=self.alterar_tipo_conta, state=tk.DISABLED)
-        self.radio_demo.grid(row=9, column=1, sticky="w")
-        self.radio_real = ttk.Radiobutton(self.root, text="Real", variable=self.var_tipo_conta, value="REAL", command=self.alterar_tipo_conta, state=tk.DISABLED)
-        self.radio_real.grid(row=9, column=2, sticky="w")
+        ttk.Label(conta_frame, text="Tipo de Conta:").grid(row=0, column=0, sticky="e")
+        tipo_conta_frame = ttk.Frame(conta_frame)
+        tipo_conta_frame.grid(row=0, column=1, sticky="w")
+        self.radio_demo = ttk.Radiobutton(tipo_conta_frame, text="Demo", variable=self.var_tipo_conta, value="PRACTICE", command=self.alterar_tipo_conta, state=tk.DISABLED)
+        self.radio_demo.pack(side=tk.LEFT)
+        self.radio_real = ttk.Radiobutton(tipo_conta_frame, text="Real", variable=self.var_tipo_conta, value="REAL", command=self.alterar_tipo_conta, state=tk.DISABLED)
+        self.radio_real.pack(side=tk.LEFT)
 
-        # Exibição de Saldo e Conta
-        ttk.Label(self.root, text="Saldo Atual:").grid(row=10, column=0, sticky="e")
-        self.label_saldo = ttk.Label(self.root, text="R$ 0.00")
-        self.label_saldo.grid(row=10, column=1, sticky="w")
+        ttk.Label(conta_frame, text="Saldo Atual:").grid(row=1, column=0, sticky="e")
+        self.label_saldo = ttk.Label(conta_frame, text="R$ 0.00")
+        self.label_saldo.grid(row=1, column=1, sticky="w")
 
-        ttk.Label(self.root, text="Conta Atual:").grid(row=11, column=0, sticky="e")
-        self.label_conta = ttk.Label(self.root, text="Demo")
-        self.label_conta.grid(row=11, column=1, sticky="w")
+        ttk.Label(conta_frame, text="Conta Atual:").grid(row=2, column=0, sticky="e")
+        self.label_conta = ttk.Label(conta_frame, text="Demo")
+        self.label_conta.grid(row=2, column=1, sticky="w")
 
         # Área de Logs com Scrollbar
-        ttk.Label(self.root, text="Logs:").grid(row=12, column=0, sticky="nw")
-        self.text_log = tk.Text(self.root, height=10, width=50)
-        self.text_log.grid(row=12, column=1, columnspan=2, sticky="we")
-        self.scrollbar_log = ttk.Scrollbar(self.root, command=self.text_log.yview)
-        self.scrollbar_log.grid(row=12, column=3, sticky='nsew')
+        logs_frame = ttk.LabelFrame(self.main_frame, text="Logs", padding=(10, 10))
+        logs_frame.grid(row=5, column=0, columnspan=3, sticky="nsew")
+        logs_frame.columnconfigure(0, weight=1)
+        logs_frame.rowconfigure(0, weight=1)
+
+        self.text_log = tk.Text(logs_frame, wrap=tk.WORD)
+        self.text_log.grid(row=0, column=0, sticky="nsew")
+        self.scrollbar_log = ttk.Scrollbar(logs_frame, command=self.text_log.yview)
+        self.scrollbar_log.grid(row=0, column=1, sticky='ns')
         self.text_log['yscrollcommand'] = self.scrollbar_log.set
 
         # Status do Ciclo
-        ttk.Label(self.root, text="Status do Ciclo:").grid(row=13, column=0, sticky="e")
-        self.label_status = ttk.Label(self.root, text="Aguardando ação...", foreground="black")
-        self.label_status.grid(row=13, column=1, columnspan=2, sticky="w")
+        status_frame = ttk.Frame(self.main_frame)
+        status_frame.grid(row=6, column=0, columnspan=3, sticky="we", pady=(10, 0))
+        ttk.Label(status_frame, text="Status do Ciclo:").grid(row=0, column=0, sticky="e")
+        self.label_status = ttk.Label(status_frame, text="Aguardando ação...", foreground="black")
+        self.label_status.grid(row=0, column=1, sticky="w")
 
         # Ajuste de Layout
-        for i in range(14):
-            self.root.grid_rowconfigure(i, pad=5)
-        for i in range(4):
-            self.root.grid_columnconfigure(i, pad=5)
+        for child in self.main_frame.winfo_children():
+            child.grid_configure(padx=5, pady=5)
 
     def fazer_login(self):
         """Realiza o login na plataforma IQ Option."""
@@ -216,7 +262,7 @@ class BotMartingaleApp:
         """Mantém apenas os últimos 15 arquivos de log."""
         log_files = [f for f in os.listdir('logs') if f.startswith('bot_martingale_') and f.endswith('.log')]
         if len(log_files) > 15:
-            # Ordenar arquivos por data de criação (do mais antigo para o mais recente)
+            # Ordenar arquivos por nome (que contém a data e hora)
             log_files.sort()
             files_to_delete = log_files[:-15]  # Manter os últimos 15 arquivos
             for file_name in files_to_delete:
