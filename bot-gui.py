@@ -20,8 +20,8 @@ def conectar(email, senha):
         iq.change_balance(TIPO_CONTA)  # Define o tipo de conta
         log_mensagem("Conexão bem-sucedida!")
         saldo = obter_saldo_disponivel()
-        label_saldo.config(text=f"R$ {saldo:.2f}")
-        label_conta.config(text="Demo" if TIPO_CONTA == "PRACTICE" else "Real")
+        atualizar_saldo(saldo)
+        atualizar_conta("Demo" if TIPO_CONTA == "PRACTICE" else "Real")
         atualizar_status("Conectado com sucesso!", "green")
     else:
         messagebox.showerror("Erro de Login", f"Falha na conexão: {reason}")
@@ -39,11 +39,8 @@ def alterar_tipo_conta(tipo):
     TIPO_CONTA = tipo
     iq.change_balance(TIPO_CONTA)  # Altera o tipo de conta
     saldo = obter_saldo_disponivel()
-
-    # Atualiza os rótulos da interface gráfica
-    label_saldo.config(text=f"R$ {saldo:.2f}")
-    label_conta.config(text="Demo" if tipo == "PRACTICE" else "Real")
-
+    atualizar_saldo(saldo)
+    atualizar_conta("Demo" if tipo == "PRACTICE" else "Real")
     log_mensagem(f"Conta alterada para: {'Demo' if tipo == 'PRACTICE' else 'Real'} | Saldo: R$ {saldo:.2f}")
 
 
@@ -78,9 +75,33 @@ def obter_saldo_disponivel():
     return saldo
 
 
+def log_mensagem(msg):
+    """Exibe logs na GUI de forma segura (thread-safe)."""
+    def _log():
+        text_log.insert(tk.END, f"{msg}\n")
+        text_log.see(tk.END)
+    root.after(0, _log)
+
+
 def atualizar_status(mensagem, cor="black"):
-    """Atualiza o status exibido na interface."""
-    label_status.config(text=mensagem, fg=cor)
+    """Atualiza o status exibido na interface de forma segura."""
+    def _atualizar():
+        label_status.config(text=mensagem, fg=cor)
+    root.after(0, _atualizar)
+
+
+def atualizar_saldo(saldo):
+    """Atualiza o saldo exibido na interface de forma segura."""
+    def _atualizar():
+        label_saldo.config(text=f"R$ {saldo:.2f}")
+    root.after(0, _atualizar)
+
+
+def atualizar_conta(tipo):
+    """Atualiza o tipo de conta exibido na interface de forma segura."""
+    def _atualizar():
+        label_conta.config(text=tipo)
+    root.after(0, _atualizar)
 
 
 def executar_ciclo(ativo, payout, direcao_inicial, valor_inicial):
@@ -94,7 +115,7 @@ def executar_ciclo(ativo, payout, direcao_inicial, valor_inicial):
         log_mensagem(f"Erro: {e}")
         atualizar_status("Erro ao calcular Martingale.", "red")
         CICLO_ATIVO = False
-        button_iniciar.config(state=tk.NORMAL)  # Reativar o botão
+        root.after(0, lambda: button_iniciar.config(state=tk.NORMAL))  # Reativar o botão
         return
 
     log_mensagem(f"Iniciando ciclo para o ativo {ativo} | Direção inicial: {direcao_inicial} | Payout: {payout}%")
@@ -108,6 +129,7 @@ def executar_ciclo(ativo, payout, direcao_inicial, valor_inicial):
             return
 
         saldo_disponivel = obter_saldo_disponivel()
+        atualizar_saldo(saldo_disponivel)
         if saldo_disponivel < valor_inicial:
             log_mensagem(f"Saldo insuficiente. Saldo disponível: R$ {saldo_disponivel:.2f}")
             atualizar_status("Saldo insuficiente.", "red")
@@ -134,6 +156,7 @@ def executar_ciclo(ativo, payout, direcao_inicial, valor_inicial):
                 break
 
             saldo_disponivel = obter_saldo_disponivel()
+            atualizar_saldo(saldo_disponivel)
             if saldo_disponivel < valor:
                 log_mensagem(f"Saldo insuficiente para a ordem {index + 2}. Saldo disponível: R$ {saldo_disponivel:.2f}")
                 atualizar_status("Saldo insuficiente para sequência.", "red")
@@ -156,7 +179,7 @@ def executar_ciclo(ativo, payout, direcao_inicial, valor_inicial):
         log_mensagem("Ciclo finalizado.")
         atualizar_status("Ciclo finalizado com sucesso.", "green")
         CICLO_ATIVO = False
-        button_iniciar.config(state=tk.NORMAL)  # Reativar o botão
+        root.after(0, lambda: button_iniciar.config(state=tk.NORMAL))  # Reativar o botão
 
 
 def iniciar_ciclo():
@@ -217,12 +240,6 @@ def encerrar_ciclo():
     log_mensagem("Ciclo interrompido manualmente.")
     atualizar_status("Ciclo interrompido.", "red")
     button_iniciar.config(state=tk.NORMAL)  # Reativar o botão
-
-
-def log_mensagem(msg):
-    """Exibe logs na GUI."""
-    text_log.insert(tk.END, f"{msg}\n")
-    text_log.see(tk.END)
 
 
 # Interface Gráfica
