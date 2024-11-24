@@ -22,9 +22,11 @@ def conectar(email, senha):
         saldo = obter_saldo_disponivel()
         label_saldo.config(text=f"R$ {saldo:.2f}")
         label_conta.config(text="Demo" if TIPO_CONTA == "PRACTICE" else "Real")
+        atualizar_status("Conectado com sucesso!", "green")
     else:
         messagebox.showerror("Erro de Login", f"Falha na conexão: {reason}")
         iq = None
+        atualizar_status("Erro ao conectar.", "red")
 
 
 def alterar_tipo_conta(tipo):
@@ -76,6 +78,11 @@ def obter_saldo_disponivel():
     return saldo
 
 
+def atualizar_status(mensagem, cor="black"):
+    """Atualiza o status exibido na interface."""
+    label_status.config(text=mensagem, fg=cor)
+
+
 def executar_ciclo(ativo, payout, direcao_inicial, valor_inicial):
     """Executa as operações conforme a sequência calculada."""
     global CICLO_ATIVO
@@ -85,58 +92,72 @@ def executar_ciclo(ativo, payout, direcao_inicial, valor_inicial):
         sequencia, acoes = calcular_martingale(valor_inicial, payout, direcao_inicial)
     except ValueError as e:
         log_mensagem(f"Erro: {e}")
-        CICLO_ATIVO = False  # Certifique-se de redefinir aqui
+        atualizar_status("Erro ao calcular Martingale.", "red")
+        CICLO_ATIVO = False
+        button_iniciar.config(state=tk.NORMAL)  # Reativar o botão
         return
 
     log_mensagem(f"Iniciando ciclo para o ativo {ativo} | Direção inicial: {direcao_inicial} | Payout: {payout}%")
+    atualizar_status("Executando ciclo...", "blue")
 
-    sincronizar_com_candle()
-    if not CICLO_ATIVO:
-        log_mensagem("Ciclo interrompido antes da primeira ordem.")
-        CICLO_ATIVO = False  # Certifique-se de redefinir aqui
-        return
-
-    saldo_disponivel = obter_saldo_disponivel()
-    if saldo_disponivel < valor_inicial:
-        log_mensagem(f"Saldo insuficiente. Saldo disponível: R$ {saldo_disponivel:.2f}")
-        CICLO_ATIVO = False  # Certifique-se de redefinir aqui
-        return
-
-    direcao_execucao = "call" if direcao_inicial == "call" else "put"
-    status, _ = iq.buy_digital_spot(ativo, valor_inicial, direcao_execucao, 1)
-
-    if status:
-        log_mensagem(f"Primeira ordem executada: {direcao_execucao} | Valor: R$ {valor_inicial:.2f}")
-    else:
-        log_mensagem(f"Erro ao executar a primeira ordem de valor R$ {valor_inicial:.2f}. Encerrando ciclo.")
-        CICLO_ATIVO = False  # Certifique-se de redefinir aqui
-        return
-
-    for index, (acao, valor) in enumerate(zip(acoes, sequencia)):
-        if not CICLO_ATIVO:
-            log_mensagem("Ciclo interrompido manualmente durante a execução.")
-            break
-
+    try:
         sincronizar_com_candle()
         if not CICLO_ATIVO:
-            break
+            log_mensagem("Ciclo interrompido antes da primeira ordem.")
+            atualizar_status("Ciclo interrompido antes da execução.", "red")
+            return
 
         saldo_disponivel = obter_saldo_disponivel()
-        if saldo_disponivel < valor:
-            log_mensagem(f"Saldo insuficiente para a ordem {index + 2}. Saldo disponível: R$ {saldo_disponivel:.2f}")
-            break
+        if saldo_disponivel < valor_inicial:
+            log_mensagem(f"Saldo insuficiente. Saldo disponível: R$ {saldo_disponivel:.2f}")
+            atualizar_status("Saldo insuficiente.", "red")
+            return
 
-        direcao_execucao = "call" if acao == "C" else "put"
-        status, _ = iq.buy_digital_spot(ativo, valor, direcao_execucao, 1)
+        direcao_execucao = "call" if direcao_inicial == "call" else "put"
+        status, _ = iq.buy_digital_spot(ativo, valor_inicial, direcao_execucao, 1)
 
         if status:
-            log_mensagem(f"Ordem {index + 2} executada: {direcao_execucao} | Valor: R$ {valor:.2f}")
+            log_mensagem(f"Primeira ordem executada: {direcao_execucao} | Valor: R$ {valor_inicial:.2f}")
         else:
-            log_mensagem(f"Erro ao executar ordem de valor R$ {valor:.2f}. Encerrando ciclo.")
-            break
+            log_mensagem(f"Erro ao executar a primeira ordem de valor R$ {valor_inicial:.2f}. Encerrando ciclo.")
+            atualizar_status("Erro na execução da primeira ordem.", "red")
+            return
 
-    log_mensagem("Ciclo finalizado.")
-    CICLO_ATIVO = False  # Adicione esta linha para redefinir a variável.
+        for index, (acao, valor) in enumerate(zip(acoes, sequencia)):
+            if not CICLO_ATIVO:
+                log_mensagem("Ciclo interrompido manualmente durante a execução.")
+                atualizar_status("Ciclo interrompido.", "red")
+                break
+
+            sincronizar_com_candle()
+            if not CICLO_ATIVO:
+                break
+
+            saldo_disponivel = obter_saldo_disponivel()
+            if saldo_disponivel < valor:
+                log_mensagem(f"Saldo insuficiente para a ordem {index + 2}. Saldo disponível: R$ {saldo_disponivel:.2f}")
+                atualizar_status("Saldo insuficiente para sequência.", "red")
+                break
+
+            direcao_execucao = "call" if acao == "C" else "put"
+            status, _ = iq.buy_digital_spot(ativo, valor, direcao_execucao, 1)
+
+            if status:
+                log_mensagem(f"Ordem {index + 2} executada: {direcao_execucao} | Valor: R$ {valor:.2f}")
+            else:
+                log_mensagem(f"Erro ao executar ordem de valor R$ {valor:.2f}. Encerrando ciclo.")
+                atualizar_status("Erro na execução de uma ordem.", "red")
+                break
+
+    except Exception as e:
+        log_mensagem(f"Erro inesperado durante o ciclo: {e}")
+        atualizar_status("Erro inesperado durante o ciclo.", "red")
+    finally:
+        log_mensagem("Ciclo finalizado.")
+        atualizar_status("Ciclo finalizado com sucesso.", "green")
+        CICLO_ATIVO = False
+        button_iniciar.config(state=tk.NORMAL)  # Reativar o botão
+
 
 def iniciar_ciclo():
     """Inicia o ciclo a partir da GUI."""
@@ -145,26 +166,45 @@ def iniciar_ciclo():
         messagebox.showwarning("Aviso", "Já existe um ciclo em execução.")
         return
 
-    ativo = entry_ativo.get()
+    ativo = entry_ativo.get().strip()
+    if not ativo:
+        messagebox.showerror("Erro", "O campo 'Ativo' não pode estar vazio.")
+        return
+
     try:
         payout = float(entry_payout.get())
-        valor_inicial = float(entry_valor_inicial.get())
+        if payout <= 0 or payout > 100:
+            messagebox.showerror("Erro", "Payout deve estar entre 0% e 100%.")
+            return
     except ValueError:
-        messagebox.showerror("Erro", "Insira valores válidos para payout e valor inicial.")
+        messagebox.showerror("Erro", "Insira um valor numérico válido para o payout.")
+        return
+
+    try:
+        valor_inicial = float(entry_valor_inicial.get())
+        if valor_inicial <= 0:
+            messagebox.showerror("Erro", "O valor inicial deve ser maior que zero.")
+            return
+    except ValueError:
+        messagebox.showerror("Erro", "Insira um valor numérico válido para o valor inicial.")
         return
 
     direcao = var_direcao.get()
-
-    if not ativo or not payout or not direcao or valor_inicial <= 0:
-        messagebox.showerror("Erro", "Preencha todos os campos corretamente.")
+    if direcao not in ["call", "put"]:
+        messagebox.showerror("Erro", "Selecione uma direção válida (Compra ou Venda).")
         return
 
     if not verificar_ativo(ativo):
-        log_mensagem(f"Erro: O ativo '{ativo}' não está disponível para operações.")
+        messagebox.showerror("Erro", f"O ativo '{ativo}' não está disponível para operações no momento.")
         return
 
     log_mensagem(f"Iniciando ciclo para o ativo {ativo} com payout {payout} e direção inicial {direcao}.")
+    atualizar_status("Preparando para executar ciclo...", "blue")
 
+    # Desativar botão durante a execução
+    button_iniciar.config(state=tk.DISABLED)
+
+    # Inicia o ciclo em uma nova thread
     thread = threading.Thread(target=executar_ciclo, args=(ativo, payout, direcao, valor_inicial))
     thread.daemon = True
     thread.start()
@@ -175,6 +215,8 @@ def encerrar_ciclo():
     global CICLO_ATIVO
     CICLO_ATIVO = False
     log_mensagem("Ciclo interrompido manualmente.")
+    atualizar_status("Ciclo interrompido.", "red")
+    button_iniciar.config(state=tk.NORMAL)  # Reativar o botão
 
 
 def log_mensagem(msg):
@@ -215,7 +257,8 @@ var_direcao = tk.StringVar(value="call")
 tk.Radiobutton(root, text="Compra", variable=var_direcao, value="call").grid(row=6, column=0)
 tk.Radiobutton(root, text="Venda", variable=var_direcao, value="put").grid(row=6, column=1)
 
-tk.Button(root, text="Iniciar Ciclo", command=iniciar_ciclo).grid(row=7, column=0)
+button_iniciar = tk.Button(root, text="Iniciar Ciclo", command=iniciar_ciclo)
+button_iniciar.grid(row=7, column=0)
 tk.Button(root, text="Encerrar Ciclo", command=encerrar_ciclo).grid(row=7, column=1)
 
 # Seleção de tipo de conta
@@ -236,5 +279,10 @@ label_conta.grid(row=10, column=1)
 # Logs na parte inferior
 text_log = tk.Text(root, height=10, width=50)
 text_log.grid(row=11, column=0, columnspan=3)
+
+# Status do ciclo
+tk.Label(root, text="Status do Ciclo:").grid(row=12, column=0)
+label_status = tk.Label(root, text="Aguardando ação...", fg="black")
+label_status.grid(row=12, column=1, columnspan=2)
 
 root.mainloop()
