@@ -1,12 +1,51 @@
 import threading
 import tkinter as tk
 from tkinter import messagebox
+from tkinter import ttk
 from iqoptionapi.stable_api import IQ_Option
 from calculadora_martingale import calcular_martingale
 import time
+import logging
+import traceback
 
-# Classe que representa a aplicação
+# Configuração do logging
+logging.basicConfig(filename='bot_martingale.log', level=logging.INFO,
+                    format='%(asctime)s - %(levelname)s - %(message)s')
+
+class IQOptionAPI:
+    """Classe para gerenciar a conexão e operações com a IQ Option."""
+
+    def __init__(self, email, senha):
+        self.email = email
+        self.senha = senha
+        self.iq = IQ_Option(email, senha)
+
+    def conectar(self):
+        """Conecta à IQ Option."""
+        status, reason = self.iq.connect()
+        return status, reason
+
+    def alterar_tipo_conta(self, tipo_conta):
+        """Altera o tipo de conta."""
+        self.iq.change_balance(tipo_conta)
+
+    def obter_saldo(self):
+        """Obtém o saldo disponível."""
+        return self.iq.get_balance()
+
+    def verificar_ativo(self, ativo):
+        """Verifica se o ativo está disponível para operações digitais."""
+        open_time = self.iq.get_all_open_time()
+        return ativo in open_time["digital"] and open_time["digital"][ativo]["open"]
+
+    def executar_ordem(self, ativo, valor, direcao):
+        """Executa uma ordem digital."""
+        status, order_id = self.iq.buy_digital_spot(ativo, valor, direcao, 1)
+        return status, order_id
+
 class BotMartingaleApp:
+    """Classe principal do aplicativo Bot Martingale."""
+
     def __init__(self, root):
         self.root = root
         self.root.title("Bot Martingale")
@@ -14,82 +53,92 @@ class BotMartingaleApp:
         # Variáveis de controle
         self.CICLO_ATIVO = False
         self.TIPO_CONTA = "PRACTICE"
-        self.iq = None
+        self.api = None
 
         # Configuração da interface
         self.setup_gui()
 
     def setup_gui(self):
         """Configura os elementos da interface gráfica."""
+        # Estilos personalizados
+        self.style = ttk.Style()
+        self.style.theme_use('default')
+        self.style.configure('TButton', font=('Helvetica', 10))
+        self.style.configure('TLabel', font=('Helvetica', 10))
+        self.style.configure('TEntry', font=('Helvetica', 10))
+
         # Campos de Login
-        tk.Label(self.root, text="E-mail:").grid(row=0, column=0, sticky="e")
-        self.entry_email = tk.Entry(self.root)
+        ttk.Label(self.root, text="E-mail:").grid(row=0, column=0, sticky="e")
+        self.entry_email = ttk.Entry(self.root)
         self.entry_email.grid(row=0, column=1, columnspan=2, sticky="we")
 
-        tk.Label(self.root, text="Senha:").grid(row=1, column=0, sticky="e")
-        self.entry_senha = tk.Entry(self.root, show="*")
+        ttk.Label(self.root, text="Senha:").grid(row=1, column=0, sticky="e")
+        self.entry_senha = ttk.Entry(self.root, show="*")
         self.entry_senha.grid(row=1, column=1, columnspan=2, sticky="we")
 
-        tk.Button(self.root, text="Login", command=self.fazer_login).grid(row=2, column=0, columnspan=3, pady=5)
+        ttk.Button(self.root, text="Login", command=self.fazer_login).grid(row=2, column=0, columnspan=3, pady=5)
 
         # Separador
-        tk.Label(self.root, text="").grid(row=3, column=0)
+        ttk.Separator(self.root, orient='horizontal').grid(row=3, column=0, columnspan=3, sticky="we", pady=5)
 
         # Campos de Configuração
-        tk.Label(self.root, text="Ativo:").grid(row=4, column=0, sticky="e")
-        self.entry_ativo = tk.Entry(self.root)
+        ttk.Label(self.root, text="Ativo:").grid(row=4, column=0, sticky="e")
+        self.entry_ativo = ttk.Entry(self.root)
         self.entry_ativo.grid(row=4, column=1, sticky="we")
 
-        tk.Label(self.root, text="Payout (%):").grid(row=5, column=0, sticky="e")
-        self.entry_payout = tk.Entry(self.root)
+        ttk.Label(self.root, text="Payout (%):").grid(row=5, column=0, sticky="e")
+        self.entry_payout = ttk.Entry(self.root)
         self.entry_payout.grid(row=5, column=1, sticky="we")
 
-        tk.Label(self.root, text="Valor Inicial:").grid(row=6, column=0, sticky="e")
-        self.entry_valor_inicial = tk.Entry(self.root)
+        ttk.Label(self.root, text="Valor Inicial:").grid(row=6, column=0, sticky="e")
+        self.entry_valor_inicial = ttk.Entry(self.root)
         self.entry_valor_inicial.grid(row=6, column=1, sticky="we")
 
-        tk.Label(self.root, text="Direção:").grid(row=7, column=0, sticky="e")
+        ttk.Label(self.root, text="Direção:").grid(row=7, column=0, sticky="e")
         self.var_direcao = tk.StringVar(value="call")
-        tk.Radiobutton(self.root, text="Compra", variable=self.var_direcao, value="call").grid(row=7, column=1, sticky="w")
-        tk.Radiobutton(self.root, text="Venda", variable=self.var_direcao, value="put").grid(row=7, column=2, sticky="w")
+        ttk.Radiobutton(self.root, text="Compra", variable=self.var_direcao, value="call").grid(row=7, column=1, sticky="w")
+        ttk.Radiobutton(self.root, text="Venda", variable=self.var_direcao, value="put").grid(row=7, column=2, sticky="w")
 
         # Botões de Controle
-        self.button_iniciar = tk.Button(self.root, text="Iniciar Ciclo", command=self.iniciar_ciclo)
+        self.button_iniciar = ttk.Button(self.root, text="Iniciar Ciclo", command=self.iniciar_ciclo)
         self.button_iniciar.grid(row=8, column=0, pady=5)
-        self.button_encerrar = tk.Button(self.root, text="Encerrar Ciclo", command=self.encerrar_ciclo, state=tk.DISABLED)
+        self.button_encerrar = ttk.Button(self.root, text="Encerrar Ciclo", command=self.encerrar_ciclo, state=tk.DISABLED)
         self.button_encerrar.grid(row=8, column=1, pady=5)
 
         # Seleção de Tipo de Conta
-        tk.Label(self.root, text="Tipo de Conta:").grid(row=9, column=0, sticky="e")
+        ttk.Label(self.root, text="Tipo de Conta:").grid(row=9, column=0, sticky="e")
         self.var_tipo_conta = tk.StringVar(value="PRACTICE")
-        self.radio_demo = tk.Radiobutton(self.root, text="Demo", variable=self.var_tipo_conta, value="PRACTICE", command=self.alterar_tipo_conta, state=tk.DISABLED)
+        self.radio_demo = ttk.Radiobutton(self.root, text="Demo", variable=self.var_tipo_conta, value="PRACTICE", command=self.alterar_tipo_conta, state=tk.DISABLED)
         self.radio_demo.grid(row=9, column=1, sticky="w")
-        self.radio_real = tk.Radiobutton(self.root, text="Real", variable=self.var_tipo_conta, value="REAL", command=self.alterar_tipo_conta, state=tk.DISABLED)
+        self.radio_real = ttk.Radiobutton(self.root, text="Real", variable=self.var_tipo_conta, value="REAL", command=self.alterar_tipo_conta, state=tk.DISABLED)
         self.radio_real.grid(row=9, column=2, sticky="w")
 
         # Exibição de Saldo e Conta
-        tk.Label(self.root, text="Saldo Atual:").grid(row=10, column=0, sticky="e")
-        self.label_saldo = tk.Label(self.root, text="R$ 0.00")
+        ttk.Label(self.root, text="Saldo Atual:").grid(row=10, column=0, sticky="e")
+        self.label_saldo = ttk.Label(self.root, text="R$ 0.00")
         self.label_saldo.grid(row=10, column=1, sticky="w")
 
-        tk.Label(self.root, text="Conta Atual:").grid(row=11, column=0, sticky="e")
-        self.label_conta = tk.Label(self.root, text="Demo")
+        ttk.Label(self.root, text="Conta Atual:").grid(row=11, column=0, sticky="e")
+        self.label_conta = ttk.Label(self.root, text="Demo")
         self.label_conta.grid(row=11, column=1, sticky="w")
 
-        # Área de Logs
-        tk.Label(self.root, text="Logs:").grid(row=12, column=0, sticky="nw")
+        # Área de Logs com Scrollbar
+        ttk.Label(self.root, text="Logs:").grid(row=12, column=0, sticky="nw")
         self.text_log = tk.Text(self.root, height=10, width=50)
         self.text_log.grid(row=12, column=1, columnspan=2, sticky="we")
+        self.scrollbar_log = ttk.Scrollbar(self.root, command=self.text_log.yview)
+        self.scrollbar_log.grid(row=12, column=3, sticky='nsew')
+        self.text_log['yscrollcommand'] = self.scrollbar_log.set
 
         # Status do Ciclo
-        tk.Label(self.root, text="Status do Ciclo:").grid(row=13, column=0, sticky="e")
-        self.label_status = tk.Label(self.root, text="Aguardando ação...", fg="black")
+        ttk.Label(self.root, text="Status do Ciclo:").grid(row=13, column=0, sticky="e")
+        self.label_status = ttk.Label(self.root, text="Aguardando ação...", foreground="black")
         self.label_status.grid(row=13, column=1, columnspan=2, sticky="w")
 
         # Ajuste de Layout
         for i in range(14):
             self.root.grid_rowconfigure(i, pad=5)
-        for i in range(3):
+        for i in range(4):
             self.root.grid_columnconfigure(i, pad=5)
 
     def fazer_login(self):
@@ -106,27 +155,36 @@ class BotMartingaleApp:
 
     def conectar(self, email, senha):
         """Conecta à IQ Option e atualiza a interface."""
-        self.iq = IQ_Option(email, senha)
-        status, reason = self.iq.connect()
-        if status:
-            self.iq.change_balance(self.TIPO_CONTA)
-            self.log_mensagem("Conexão bem-sucedida!")
-            saldo = self.obter_saldo_disponivel()
-            self.atualizar_saldo(saldo)
-            self.atualizar_conta("Demo" if self.TIPO_CONTA == "PRACTICE" else "Real")
-            self.atualizar_status("Conectado com sucesso!", "green")
-            # Habilitar botões após login
-            self.root.after(0, lambda: self.radio_demo.config(state=tk.NORMAL))
-            self.root.after(0, lambda: self.radio_real.config(state=tk.NORMAL))
-        else:
-            self.iq = None
+        try:
+            self.api = IQOptionAPI(email, senha)
+            status, reason = self.api.conectar()
+            if status:
+                self.api.alterar_tipo_conta(self.TIPO_CONTA)
+                self.log_mensagem("Conexão bem-sucedida!")
+                saldo = self.obter_saldo_disponivel()
+                self.atualizar_saldo(saldo)
+                self.atualizar_conta("Demo" if self.TIPO_CONTA == "PRACTICE" else "Real")
+                self.atualizar_status("Conectado com sucesso!", "green")
+                # Habilitar botões após login
+                self.root.after(0, lambda: self.radio_demo.config(state=tk.NORMAL))
+                self.root.after(0, lambda: self.radio_real.config(state=tk.NORMAL))
+                logging.info("Usuário conectado com sucesso.")
+            else:
+                self.api = None
+                self.atualizar_status("Erro ao conectar.", "red")
+                self.log_mensagem(f"Falha na conexão: {reason}")
+                messagebox.showerror("Erro de Login", f"Falha na conexão: {reason}")
+                logging.error(f"Falha na conexão: {reason}")
+        except Exception as e:
+            self.api = None
             self.atualizar_status("Erro ao conectar.", "red")
-            self.log_mensagem(f"Falha na conexão: {reason}")
-            messagebox.showerror("Erro de Login", f"Falha na conexão: {reason}")
+            self.log_mensagem(f"Exceção durante conexão: {e}")
+            messagebox.showerror("Erro de Login", f"Exceção durante conexão: {e}")
+            logging.error(f"Exceção durante conexão: {traceback.format_exc()}")
 
     def alterar_tipo_conta(self):
         """Altera o tipo de conta (Demo ou Real)."""
-        if self.iq is None:
+        if self.api is None:
             messagebox.showerror("Erro", "Faça login antes de alterar o tipo de conta.")
             return
 
@@ -141,18 +199,18 @@ class BotMartingaleApp:
                 return
 
         self.TIPO_CONTA = novo_tipo
-        self.iq.change_balance(self.TIPO_CONTA)
+        self.api.alterar_tipo_conta(self.TIPO_CONTA)
         saldo = self.obter_saldo_disponivel()
         self.atualizar_saldo(saldo)
         self.atualizar_conta("Demo" if self.TIPO_CONTA == "PRACTICE" else "Real")
         self.log_mensagem(f"Conta alterada para: {'Demo' if self.TIPO_CONTA == 'PRACTICE' else 'Real'} | Saldo: R$ {saldo:.2f}")
+        logging.info(f"Tipo de conta alterado para {self.TIPO_CONTA}.")
 
     def verificar_ativo(self, ativo):
         """Verifica se o ativo está disponível para operações digitais."""
-        if self.iq is None:
+        if self.api is None:
             return False
-        open_time = self.iq.get_all_open_time()
-        return ativo in open_time["digital"] and open_time["digital"][ativo]["open"]
+        return self.api.verificar_ativo(ativo)
 
     def sincronizar_com_candle(self):
         """Sincroniza com o início do próximo candle."""
@@ -166,10 +224,11 @@ class BotMartingaleApp:
 
     def obter_saldo_disponivel(self):
         """Obtém o saldo disponível da conta atual."""
-        if self.iq is None:
+        if self.api is None:
             return 0.0
-        saldo = self.iq.get_balance()
+        saldo = self.api.obter_saldo()
         self.log_mensagem(f"Saldo atualizado: R$ {saldo:.2f}")
+        logging.info(f"Saldo atualizado: R$ {saldo:.2f}")
         return saldo
 
     def log_mensagem(self, msg):
@@ -178,11 +237,12 @@ class BotMartingaleApp:
             self.text_log.insert(tk.END, f"{msg}\n")
             self.text_log.see(tk.END)
         self.root.after(0, _log)
+        logging.info(msg)
 
     def atualizar_status(self, mensagem, cor="black"):
         """Atualiza o status exibido na interface."""
         def _atualizar():
-            self.label_status.config(text=mensagem, fg=cor)
+            self.label_status.config(text=mensagem, foreground=cor)
         self.root.after(0, _atualizar)
 
     def atualizar_saldo(self, saldo):
@@ -210,16 +270,22 @@ class BotMartingaleApp:
             self.CICLO_ATIVO = False
             self.root.after(0, lambda: self.button_iniciar.config(state=tk.NORMAL))
             self.root.after(0, lambda: self.button_encerrar.config(state=tk.DISABLED))
+            logging.error(f"Erro ao calcular Martingale: {e}")
             return
 
         self.log_mensagem(f"Iniciando ciclo para o ativo {ativo} | Direção inicial: {direcao_inicial} | Payout: {payout}%")
         self.atualizar_status("Executando ciclo...", "blue")
+        logging.info(f"Iniciando ciclo para o ativo {ativo}.")
+
+        # Mostrar mensagem de confirmação
+        messagebox.showinfo("Ciclo Iniciado", f"O ciclo para o ativo {ativo} foi iniciado.")
 
         try:
             self.sincronizar_com_candle()
             if not self.CICLO_ATIVO:
                 self.log_mensagem("Ciclo interrompido antes da primeira ordem.")
                 self.atualizar_status("Ciclo interrompido antes da execução.", "red")
+                logging.warning("Ciclo interrompido antes da primeira ordem.")
                 return
 
             saldo_disponivel = self.obter_saldo_disponivel()
@@ -227,22 +293,26 @@ class BotMartingaleApp:
             if saldo_disponivel < valor_inicial:
                 self.log_mensagem(f"Saldo insuficiente. Saldo disponível: R$ {saldo_disponivel:.2f}")
                 self.atualizar_status("Saldo insuficiente.", "red")
+                logging.error("Saldo insuficiente para iniciar o ciclo.")
                 return
 
             direcao_execucao = "call" if direcao_inicial == "call" else "put"
-            status, _ = self.iq.buy_digital_spot(ativo, valor_inicial, direcao_execucao, 1)
+            status, _ = self.api.executar_ordem(ativo, valor_inicial, direcao_execucao)
 
             if status:
                 self.log_mensagem(f"Primeira ordem executada: {direcao_execucao} | Valor: R$ {valor_inicial:.2f}")
+                logging.info(f"Primeira ordem executada: {direcao_execucao} | Valor: R$ {valor_inicial:.2f}")
             else:
                 self.log_mensagem(f"Erro ao executar a primeira ordem de valor R$ {valor_inicial:.2f}. Encerrando ciclo.")
                 self.atualizar_status("Erro na execução da primeira ordem.", "red")
+                logging.error("Erro na execução da primeira ordem.")
                 return
 
             for index, (acao, valor) in enumerate(zip(acoes, sequencia)):
                 if not self.CICLO_ATIVO:
                     self.log_mensagem("Ciclo interrompido manualmente durante a execução.")
                     self.atualizar_status("Ciclo interrompido.", "red")
+                    logging.warning("Ciclo interrompido manualmente durante a execução.")
                     break
 
                 self.sincronizar_com_candle()
@@ -254,16 +324,19 @@ class BotMartingaleApp:
                 if saldo_disponivel < valor:
                     self.log_mensagem(f"Saldo insuficiente para a ordem {index + 2}. Saldo disponível: R$ {saldo_disponivel:.2f}")
                     self.atualizar_status("Saldo insuficiente para sequência.", "red")
+                    logging.error("Saldo insuficiente durante a sequência.")
                     break
 
                 direcao_execucao = "call" if acao == "C" else "put"
-                status, _ = self.iq.buy_digital_spot(ativo, valor, direcao_execucao, 1)
+                status, _ = self.api.executar_ordem(ativo, valor, direcao_execucao)
 
                 if status:
                     self.log_mensagem(f"Ordem {index + 2} executada: {direcao_execucao} | Valor: R$ {valor:.2f}")
+                    logging.info(f"Ordem {index + 2} executada: {direcao_execucao} | Valor: R$ {valor:.2f}")
                 else:
                     self.log_mensagem(f"Erro ao executar ordem de valor R$ {valor:.2f}. Encerrando ciclo.")
                     self.atualizar_status("Erro na execução de uma ordem.", "red")
+                    logging.error(f"Erro ao executar ordem de valor R$ {valor:.2f}.")
                     break
 
             # Atualizar saldo após o ciclo
@@ -273,12 +346,17 @@ class BotMartingaleApp:
         except Exception as e:
             self.log_mensagem(f"Erro inesperado durante o ciclo: {e}")
             self.atualizar_status("Erro inesperado durante o ciclo.", "red")
+            logging.error(f"Erro inesperado durante o ciclo: {traceback.format_exc()}")
+            raise  # Re-lançar exceção para facilitar a depuração
         finally:
             self.log_mensagem("Ciclo finalizado.")
             self.atualizar_status("Ciclo finalizado.", "green")
             self.CICLO_ATIVO = False
             self.root.after(0, lambda: self.button_iniciar.config(state=tk.NORMAL))
             self.root.after(0, lambda: self.button_encerrar.config(state=tk.DISABLED))
+            logging.info("Ciclo finalizado.")
+            # Mostrar mensagem ao finalizar ciclo
+            messagebox.showinfo("Ciclo Finalizado", "O ciclo de negociação foi finalizado.")
 
     def iniciar_ciclo(self):
         """Inicia o ciclo de negociação."""
@@ -286,7 +364,7 @@ class BotMartingaleApp:
             messagebox.showwarning("Aviso", "Já existe um ciclo em execução.")
             return
 
-        if self.iq is None:
+        if self.api is None:
             messagebox.showerror("Erro", "Você precisa estar conectado para iniciar um ciclo.")
             return
 
@@ -323,9 +401,6 @@ class BotMartingaleApp:
         self.log_mensagem(f"Iniciando ciclo para o ativo {ativo} com payout {payout}% e direção inicial {direcao}.")
         self.atualizar_status("Preparando para executar ciclo...", "blue")
 
-        # Desativar botões durante a execução
-        self.button_iniciar.config(state=tk.DISABLED)
-
         # Inicia o ciclo em uma nova thread
         threading.Thread(target=self.executar_ciclo, args=(ativo, payout, direcao, valor_inicial)).start()
 
@@ -342,6 +417,7 @@ class BotMartingaleApp:
             self.atualizar_status("Ciclo interrompido.", "red")
             self.button_iniciar.config(state=tk.NORMAL)
             self.button_encerrar.config(state=tk.DISABLED)
+            logging.warning("Ciclo interrompido manualmente.")
 
 if __name__ == "__main__":
     root = tk.Tk()
