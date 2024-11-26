@@ -1,0 +1,13 @@
+2024-11-26 09:14:33,542 - INFO - Conexão bem-sucedida!
+2024-11-26 09:14:33,770 - INFO - Saldo atualizado: R$ 10000.78
+2024-11-26 09:14:33,770 - INFO - Saldo atualizado: R$ 10000.78
+2024-11-26 09:14:33,770 - INFO - Usuário conectado com sucesso.
+2024-11-26 09:14:43,638 - INFO - Enviando ordem: CALL | Ativo: EURUSD-op | Valor: R$ 2.00 | Payout: 85.0%
+2024-11-26 09:14:44,684 - INFO - Ordem digital executada com sucesso no ativo EURUSD-op! Order ID: 19481335924
+2024-11-26 09:14:44,684 - INFO - Ordem digital enviada com sucesso para EURUSD-op.
+2024-11-26 09:15:09,902 - INFO - Enviando ordem: CALL | Ativo: EURUSD-op | Valor: R$ 2.00 | Payout: 85.0%
+2024-11-26 09:15:11,279 - INFO - Ordem digital executada com sucesso no ativo EURUSD-op! Order ID: 19481336986
+2024-11-26 09:15:11,279 - INFO - Ordem digital enviada com sucesso para EURUSD-op.
+2024-11-26 09:15:16,805 - INFO - Enviando ordem: PUT | Ativo: EURUSD-op | Valor: R$ 2.00 | Payout: 85.0%
+2024-11-26 09:15:18,392 - INFO - Ordem digital executada com sucesso no ativo EURUSD-op! Order ID: 19481337377
+2024-11-26 09:15:18,515 - INFO - Ordem digital enviada com sucesso para EURUSD-op.

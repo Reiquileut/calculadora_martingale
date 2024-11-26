@@ -2,10 +2,10 @@ from iqoptionapi.stable_api import IQ_Option
 import time
 
 # Configurações
-EMAIL = "email"
-SENHA = "senha"
+EMAIL = "thiagosoteroprado@gmail.com"
+SENHA = "thiago.thi"
 ATIVO = "EURUSD-op"
-VALOR = 1  # Valor da operação
+VALOR = 1  # Valor da operaçãoåç
 DIRECAO = "call"  # ou "put"
 EXPIRACAO = 1  # Tempo de expiração em minutos
 MAX_TENTATIVAS = 3  # Máximo de tentativas para reconexão

@@ -458,7 +458,7 @@ class BotMartingaleApp:
             messagebox.showerror("Erro", "Você precisa estar conectado para iniciar um ciclo.")
             return
 
-        ativo = self.entry_ativo.get().strip().upper()
+        ativo = self.entry_ativo.get().strip()
         if not ativo:
             messagebox.showerror("Erro", "O campo 'Ativo' não pode estar vazio.")
             return
