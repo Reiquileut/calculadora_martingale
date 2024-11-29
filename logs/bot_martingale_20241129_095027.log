@@ -1,0 +1,449 @@
+2024-11-29 09:50:27,885 - INFO - Conexão bem-sucedida!
+2024-11-29 09:50:28,173 - INFO - Saldo atualizado: R$ 10090.88
+2024-11-29 09:50:28,173 - INFO - Saldo atualizado: R$ 10090.88
+2024-11-29 09:50:28,177 - INFO - Usuário conectado com sucesso.
+2024-11-29 09:50:40,943 - INFO - Saldo atualizado: R$ 612.46
+2024-11-29 09:50:40,943 - INFO - Saldo atualizado: R$ 612.46
+2024-11-29 09:50:40,943 - INFO - Conta alterada para: Real | Saldo: R$ 612.46
+2024-11-29 09:50:40,943 - INFO - Tipo de conta alterado para REAL.
+2024-11-29 09:50:56,446 - INFO - Iniciando ciclo para o ativo EURUSD-op com payout 85.0% e direção inicial call.
+2024-11-29 09:50:56,452 - INFO - Iniciando ciclo para o ativo EURUSD-op | Direção inicial: call | Payout: 85.0%
+2024-11-29 09:50:56,452 - INFO - Iniciando ciclo para o ativo EURUSD-op.
+2024-11-29 09:51:00,301 - INFO - Saldo atualizado: R$ 612.46
+2024-11-29 09:51:00,301 - INFO - Saldo atualizado: R$ 612.46
+2024-11-29 09:51:01,455 - INFO - Primeira ordem executada: call | Valor: R$ 2.00
+2024-11-29 09:51:01,455 - INFO - Primeira ordem executada: call | Valor: R$ 2.00
+2024-11-29 09:52:00,282 - INFO - Saldo atualizado: R$ 610.46
+2024-11-29 09:52:00,283 - INFO - Saldo atualizado: R$ 610.46
+2024-11-29 09:52:01,382 - INFO - Ordem 2 executada: put | Valor: R$ 2.35
+2024-11-29 09:52:01,382 - INFO - Ordem 2 executada: put | Valor: R$ 2.35
+2024-11-29 09:53:00,267 - INFO - Saldo atualizado: R$ 608.11
+2024-11-29 09:53:00,268 - INFO - Saldo atualizado: R$ 608.11
+2024-11-29 09:53:01,256 - INFO - Ordem 3 executada: call | Valor: R$ 5.12
+2024-11-29 09:53:01,258 - INFO - Ordem 3 executada: call | Valor: R$ 5.12
+2024-11-29 09:53:57,931 - INFO - Ciclo interrompido manualmente.
+2024-11-29 09:53:57,933 - WARNING - Ciclo interrompido manualmente.
+2024-11-29 09:53:58,173 - INFO - Saldo atualizado: R$ 602.99
+2024-11-29 09:53:58,173 - INFO - Saldo atualizado: R$ 602.99
+2024-11-29 09:53:58,176 - INFO - Ciclo finalizado.
+2024-11-29 09:53:58,177 - INFO - Ciclo finalizado.
+2024-11-29 09:54:10,875 - INFO - Iniciando ciclo para o ativo EURUSD-op com payout 85.0% e direção inicial call.
+2024-11-29 09:54:10,882 - INFO - Iniciando ciclo para o ativo EURUSD-op | Direção inicial: call | Payout: 85.0%
+2024-11-29 09:54:10,882 - INFO - Iniciando ciclo para o ativo EURUSD-op.
+2024-11-29 09:55:00,259 - INFO - Saldo atualizado: R$ 612.68
+2024-11-29 09:55:00,261 - INFO - Saldo atualizado: R$ 612.68
+2024-11-29 09:55:01,512 - INFO - Primeira ordem executada: call | Valor: R$ 2.00
+2024-11-29 09:55:01,512 - INFO - Primeira ordem executada: call | Valor: R$ 2.00
+2024-11-29 09:55:47,583 - INFO - Ciclo interrompido manualmente.
+2024-11-29 09:55:47,585 - WARNING - Ciclo interrompido manualmente.
+2024-11-29 09:55:47,875 - INFO - Saldo atualizado: R$ 610.68
+2024-11-29 09:55:47,875 - INFO - Saldo atualizado: R$ 610.68
+2024-11-29 09:55:47,879 - INFO - Ciclo finalizado.
+2024-11-29 09:55:47,882 - INFO - Ciclo finalizado.
+2024-11-29 09:57:25,619 - INFO - Iniciando ciclo para o ativo EURUSD-op com payout 85.0% e direção inicial call.
+2024-11-29 09:57:25,626 - INFO - Iniciando ciclo para o ativo EURUSD-op | Direção inicial: call | Payout: 85.0%
+2024-11-29 09:57:25,626 - INFO - Iniciando ciclo para o ativo EURUSD-op.
+2024-11-29 09:58:00,289 - INFO - Saldo atualizado: R$ 614.46
+2024-11-29 09:58:00,290 - INFO - Saldo atualizado: R$ 614.46
+2024-11-29 09:58:01,385 - INFO - Primeira ordem executada: call | Valor: R$ 2.00
+2024-11-29 09:58:01,385 - INFO - Primeira ordem executada: call | Valor: R$ 2.00
+2024-11-29 09:59:00,321 - INFO - Saldo atualizado: R$ 612.46
+2024-11-29 09:59:00,322 - INFO - Saldo atualizado: R$ 612.46
+2024-11-29 09:59:01,207 - INFO - Ordem 2 executada: put | Valor: R$ 2.35
+2024-11-29 09:59:01,207 - INFO - Ordem 2 executada: put | Valor: R$ 2.35
+2024-11-29 10:00:00,253 - INFO - Saldo atualizado: R$ 613.89
+2024-11-29 10:00:00,254 - INFO - Saldo atualizado: R$ 613.89
+2024-11-29 10:00:01,840 - INFO - Ordem 3 executada: call | Valor: R$ 5.12
+2024-11-29 10:00:01,840 - INFO - Ordem 3 executada: call | Valor: R$ 5.12
+2024-11-29 10:00:58,826 - INFO - Ciclo interrompido manualmente.
+2024-11-29 10:00:58,856 - WARNING - Ciclo interrompido manualmente.
+2024-11-29 10:00:59,076 - INFO - Saldo atualizado: R$ 608.77
+2024-11-29 10:00:59,076 - INFO - Saldo atualizado: R$ 608.77
+2024-11-29 10:00:59,079 - INFO - Ciclo finalizado.
+2024-11-29 10:00:59,079 - INFO - Ciclo finalizado.
+2024-11-29 10:08:17,055 - INFO - Iniciando ciclo para o ativo EURUSD-op com payout 85.0% e direção inicial put.
+2024-11-29 10:08:17,062 - INFO - Iniciando ciclo para o ativo EURUSD-op | Direção inicial: put | Payout: 85.0%
+2024-11-29 10:08:17,063 - INFO - Iniciando ciclo para o ativo EURUSD-op.
+2024-11-29 10:09:00,296 - INFO - Saldo atualizado: R$ 618.46
+2024-11-29 10:09:00,297 - INFO - Saldo atualizado: R$ 618.46
+2024-11-29 10:09:01,293 - INFO - Primeira ordem executada: put | Valor: R$ 2.00
+2024-11-29 10:09:01,293 - INFO - Primeira ordem executada: put | Valor: R$ 2.00
+2024-11-29 10:09:57,673 - INFO - Ciclo interrompido manualmente.
+2024-11-29 10:09:57,675 - WARNING - Ciclo interrompido manualmente.
+2024-11-29 10:09:57,997 - INFO - Saldo atualizado: R$ 616.46
+2024-11-29 10:09:57,997 - INFO - Saldo atualizado: R$ 616.46
+2024-11-29 10:09:58,001 - INFO - Ciclo finalizado.
+2024-11-29 10:09:58,002 - INFO - Ciclo finalizado.
+2024-11-29 10:10:12,983 - INFO - Iniciando ciclo para o ativo EURUSD-op com payout 85.0% e direção inicial put.
+2024-11-29 10:10:12,991 - INFO - Iniciando ciclo para o ativo EURUSD-op | Direção inicial: put | Payout: 85.0%
+2024-11-29 10:10:12,991 - INFO - Iniciando ciclo para o ativo EURUSD-op.
+2024-11-29 10:11:00,303 - INFO - Saldo atualizado: R$ 620.24
+2024-11-29 10:11:00,304 - INFO - Saldo atualizado: R$ 620.24
+2024-11-29 10:11:01,400 - INFO - Primeira ordem executada: put | Valor: R$ 2.00
+2024-11-29 10:11:01,400 - INFO - Primeira ordem executada: put | Valor: R$ 2.00
+2024-11-29 10:11:57,394 - INFO - Ciclo interrompido manualmente.
+2024-11-29 10:11:57,395 - WARNING - Ciclo interrompido manualmente.
+2024-11-29 10:11:57,680 - INFO - Saldo atualizado: R$ 618.24
+2024-11-29 10:11:57,680 - INFO - Saldo atualizado: R$ 618.24
+2024-11-29 10:11:57,684 - INFO - Ciclo finalizado.
+2024-11-29 10:11:57,684 - INFO - Ciclo finalizado.
+2024-11-29 10:12:41,556 - INFO - Iniciando ciclo para o ativo EURUSD-op com payout 85.0% e direção inicial put.
+2024-11-29 10:12:41,562 - INFO - Iniciando ciclo para o ativo EURUSD-op | Direção inicial: put | Payout: 85.0%
+2024-11-29 10:12:41,563 - INFO - Iniciando ciclo para o ativo EURUSD-op.
+2024-11-29 10:13:00,276 - INFO - Saldo atualizado: R$ 622.02
+2024-11-29 10:13:00,277 - INFO - Saldo atualizado: R$ 622.02
+2024-11-29 10:13:01,347 - INFO - Primeira ordem executada: put | Valor: R$ 2.00
+2024-11-29 10:13:01,347 - INFO - Primeira ordem executada: put | Valor: R$ 2.00
+2024-11-29 10:13:56,101 - INFO - Ciclo interrompido manualmente.
+2024-11-29 10:13:56,102 - WARNING - Ciclo interrompido manualmente.
+2024-11-29 10:13:56,359 - INFO - Saldo atualizado: R$ 620.02
+2024-11-29 10:13:56,359 - INFO - Saldo atualizado: R$ 620.02
+2024-11-29 10:13:56,362 - INFO - Ciclo finalizado.
+2024-11-29 10:13:56,363 - INFO - Ciclo finalizado.
+2024-11-29 10:14:13,166 - INFO - Iniciando ciclo para o ativo EURUSD-op com payout 85.0% e direção inicial put.
+2024-11-29 10:14:13,174 - INFO - Iniciando ciclo para o ativo EURUSD-op | Direção inicial: put | Payout: 85.0%
+2024-11-29 10:14:13,174 - INFO - Iniciando ciclo para o ativo EURUSD-op.
+2024-11-29 10:15:00,274 - INFO - Saldo atualizado: R$ 623.80
+2024-11-29 10:15:00,274 - INFO - Saldo atualizado: R$ 623.80
+2024-11-29 10:15:01,184 - INFO - Primeira ordem executada: put | Valor: R$ 2.00
+2024-11-29 10:15:01,184 - INFO - Primeira ordem executada: put | Valor: R$ 2.00
+2024-11-29 10:15:59,159 - INFO - Ciclo interrompido manualmente.
+2024-11-29 10:15:59,160 - WARNING - Ciclo interrompido manualmente.
+2024-11-29 10:15:59,465 - INFO - Saldo atualizado: R$ 621.80
+2024-11-29 10:15:59,465 - INFO - Saldo atualizado: R$ 621.80
+2024-11-29 10:15:59,469 - INFO - Ciclo finalizado.
+2024-11-29 10:15:59,470 - INFO - Ciclo finalizado.
+2024-11-29 10:16:12,078 - INFO - Iniciando ciclo para o ativo EURUSD-op com payout 85.0% e direção inicial put.
+2024-11-29 10:16:12,085 - INFO - Iniciando ciclo para o ativo EURUSD-op | Direção inicial: put | Payout: 85.0%
+2024-11-29 10:16:12,085 - INFO - Iniciando ciclo para o ativo EURUSD-op.
+2024-11-29 10:17:00,331 - INFO - Saldo atualizado: R$ 625.58
+2024-11-29 10:17:00,332 - INFO - Saldo atualizado: R$ 625.58
+2024-11-29 10:17:01,468 - INFO - Primeira ordem executada: put | Valor: R$ 2.00
+2024-11-29 10:17:01,468 - INFO - Primeira ordem executada: put | Valor: R$ 2.00
+2024-11-29 10:18:00,254 - INFO - Saldo atualizado: R$ 623.58
+2024-11-29 10:18:00,254 - INFO - Saldo atualizado: R$ 623.58
+2024-11-29 10:18:01,208 - INFO - Ordem 2 executada: put | Valor: R$ 2.35
+2024-11-29 10:18:01,208 - INFO - Ordem 2 executada: put | Valor: R$ 2.35
+2024-11-29 10:18:59,544 - INFO - Ciclo interrompido manualmente.
+2024-11-29 10:18:59,545 - WARNING - Ciclo interrompido manualmente.
+2024-11-29 10:18:59,827 - INFO - Saldo atualizado: R$ 621.23
+2024-11-29 10:18:59,827 - INFO - Saldo atualizado: R$ 621.23
+2024-11-29 10:18:59,831 - INFO - Ciclo finalizado.
+2024-11-29 10:18:59,832 - INFO - Ciclo finalizado.
+2024-11-29 10:19:09,610 - INFO - Iniciando ciclo para o ativo EURUSD-op com payout 85.0% e direção inicial put.
+2024-11-29 10:19:09,617 - INFO - Iniciando ciclo para o ativo EURUSD-op | Direção inicial: put | Payout: 85.0%
+2024-11-29 10:19:09,618 - INFO - Iniciando ciclo para o ativo EURUSD-op.
+2024-11-29 10:20:00,250 - INFO - Saldo atualizado: R$ 625.68
+2024-11-29 10:20:00,251 - INFO - Saldo atualizado: R$ 625.68
+2024-11-29 10:20:01,653 - INFO - Primeira ordem executada: put | Valor: R$ 2.00
+2024-11-29 10:20:01,654 - INFO - Primeira ordem executada: put | Valor: R$ 2.00
+2024-11-29 10:21:00,329 - INFO - Saldo atualizado: R$ 623.68
+2024-11-29 10:21:00,329 - INFO - Saldo atualizado: R$ 623.68
+2024-11-29 10:21:01,244 - INFO - Ordem 2 executada: put | Valor: R$ 2.35
+2024-11-29 10:21:01,244 - INFO - Ordem 2 executada: put | Valor: R$ 2.35
+2024-11-29 10:22:00,273 - INFO - Ciclo interrompido manualmente.
+2024-11-29 10:22:00,303 - WARNING - Ciclo interrompido manualmente.
+2024-11-29 10:22:00,323 - INFO - Saldo atualizado: R$ 625.78
+2024-11-29 10:22:00,323 - INFO - Saldo atualizado: R$ 625.78
+2024-11-29 10:22:01,237 - INFO - Ordem 3 executada: call | Valor: R$ 5.12
+2024-11-29 10:22:01,238 - INFO - Ordem 3 executada: call | Valor: R$ 5.12
+2024-11-29 10:22:01,238 - INFO - Ciclo interrompido manualmente durante a execução.
+2024-11-29 10:22:01,242 - WARNING - Ciclo interrompido manualmente durante a execução.
+2024-11-29 10:22:01,469 - INFO - Saldo atualizado: R$ 620.66
+2024-11-29 10:22:01,469 - INFO - Saldo atualizado: R$ 620.66
+2024-11-29 10:22:01,473 - INFO - Ciclo finalizado.
+2024-11-29 10:22:01,477 - INFO - Ciclo finalizado.
+2024-11-29 10:22:35,727 - INFO - Iniciando ciclo para o ativo EURUSD-op com payout 85.0% e direção inicial put.
+2024-11-29 10:22:35,736 - INFO - Iniciando ciclo para o ativo EURUSD-op | Direção inicial: put | Payout: 85.0%
+2024-11-29 10:22:35,736 - INFO - Iniciando ciclo para o ativo EURUSD-op.
+2024-11-29 10:23:00,310 - INFO - Saldo atualizado: R$ 625.98
+2024-11-29 10:23:00,312 - INFO - Saldo atualizado: R$ 625.98
+2024-11-29 10:23:01,431 - INFO - Primeira ordem executada: put | Valor: R$ 2.00
+2024-11-29 10:23:01,431 - INFO - Primeira ordem executada: put | Valor: R$ 2.00
+2024-11-29 10:23:57,471 - INFO - Ciclo interrompido manualmente.
+2024-11-29 10:23:57,472 - WARNING - Ciclo interrompido manualmente.
+2024-11-29 10:23:57,717 - INFO - Saldo atualizado: R$ 623.98
+2024-11-29 10:23:57,717 - INFO - Saldo atualizado: R$ 623.98
+2024-11-29 10:23:57,721 - INFO - Ciclo finalizado.
+2024-11-29 10:23:57,721 - INFO - Ciclo finalizado.
+2024-11-29 10:24:03,236 - INFO - Iniciando ciclo para o ativo EURUSD-op com payout 85.0% e direção inicial put.
+2024-11-29 10:24:03,242 - INFO - Iniciando ciclo para o ativo EURUSD-op | Direção inicial: put | Payout: 85.0%
+2024-11-29 10:24:03,242 - INFO - Iniciando ciclo para o ativo EURUSD-op.
+2024-11-29 10:25:00,272 - INFO - Saldo atualizado: R$ 627.76
+2024-11-29 10:25:00,272 - INFO - Saldo atualizado: R$ 627.76
+2024-11-29 10:25:01,466 - INFO - Primeira ordem executada: put | Valor: R$ 2.00
+2024-11-29 10:25:01,466 - INFO - Primeira ordem executada: put | Valor: R$ 2.00
+2024-11-29 10:25:57,416 - INFO - Ciclo interrompido manualmente.
+2024-11-29 10:25:57,418 - WARNING - Ciclo interrompido manualmente.
+2024-11-29 10:25:57,739 - INFO - Saldo atualizado: R$ 625.76
+2024-11-29 10:25:57,739 - INFO - Saldo atualizado: R$ 625.76
+2024-11-29 10:25:57,743 - INFO - Ciclo finalizado.
+2024-11-29 10:25:57,748 - INFO - Ciclo finalizado.
+2024-11-29 10:26:03,477 - INFO - Iniciando ciclo para o ativo EURUSD-op com payout 85.0% e direção inicial put.
+2024-11-29 10:26:03,484 - INFO - Iniciando ciclo para o ativo EURUSD-op | Direção inicial: put | Payout: 85.0%
+2024-11-29 10:26:03,484 - INFO - Iniciando ciclo para o ativo EURUSD-op.
+2024-11-29 10:27:00,273 - INFO - Saldo atualizado: R$ 629.54
+2024-11-29 10:27:00,273 - INFO - Saldo atualizado: R$ 629.54
+2024-11-29 10:27:01,323 - INFO - Primeira ordem executada: put | Valor: R$ 2.00
+2024-11-29 10:27:01,323 - INFO - Primeira ordem executada: put | Valor: R$ 2.00
+2024-11-29 10:27:55,881 - INFO - Ciclo interrompido manualmente.
+2024-11-29 10:27:55,881 - WARNING - Ciclo interrompido manualmente.
+2024-11-29 10:27:56,171 - INFO - Saldo atualizado: R$ 627.54
+2024-11-29 10:27:56,171 - INFO - Saldo atualizado: R$ 627.54
+2024-11-29 10:27:56,175 - INFO - Ciclo finalizado.
+2024-11-29 10:27:56,176 - INFO - Ciclo finalizado.
+2024-11-29 10:28:02,176 - INFO - Iniciando ciclo para o ativo EURUSD-op com payout 85.0% e direção inicial put.
+2024-11-29 10:28:02,183 - INFO - Iniciando ciclo para o ativo EURUSD-op | Direção inicial: put | Payout: 85.0%
+2024-11-29 10:28:02,183 - INFO - Iniciando ciclo para o ativo EURUSD-op.
+2024-11-29 10:29:00,336 - INFO - Saldo atualizado: R$ 631.32
+2024-11-29 10:29:00,336 - INFO - Saldo atualizado: R$ 631.32
+2024-11-29 10:29:01,179 - INFO - Primeira ordem executada: put | Valor: R$ 2.00
+2024-11-29 10:29:01,179 - INFO - Primeira ordem executada: put | Valor: R$ 2.00
+2024-11-29 10:29:58,383 - INFO - Ciclo interrompido manualmente.
+2024-11-29 10:29:58,384 - WARNING - Ciclo interrompido manualmente.
+2024-11-29 10:29:58,705 - INFO - Saldo atualizado: R$ 629.32
+2024-11-29 10:29:58,705 - INFO - Saldo atualizado: R$ 629.32
+2024-11-29 10:29:58,708 - INFO - Ciclo finalizado.
+2024-11-29 10:29:58,709 - INFO - Ciclo finalizado.
+2024-11-29 10:30:12,270 - INFO - Iniciando ciclo para o ativo EURUSD-op com payout 85.0% e direção inicial put.
+2024-11-29 10:30:12,276 - INFO - Iniciando ciclo para o ativo EURUSD-op | Direção inicial: put | Payout: 85.0%
+2024-11-29 10:30:12,277 - INFO - Iniciando ciclo para o ativo EURUSD-op.
+2024-11-29 10:31:00,300 - INFO - Saldo atualizado: R$ 633.10
+2024-11-29 10:31:00,301 - INFO - Saldo atualizado: R$ 633.10
+2024-11-29 10:31:01,297 - INFO - Primeira ordem executada: put | Valor: R$ 2.00
+2024-11-29 10:31:01,297 - INFO - Primeira ordem executada: put | Valor: R$ 2.00
+2024-11-29 10:31:56,495 - INFO - Ciclo interrompido manualmente.
+2024-11-29 10:31:56,497 - WARNING - Ciclo interrompido manualmente.
+2024-11-29 10:31:56,758 - INFO - Saldo atualizado: R$ 631.10
+2024-11-29 10:31:56,758 - INFO - Saldo atualizado: R$ 631.10
+2024-11-29 10:31:56,762 - INFO - Ciclo finalizado.
+2024-11-29 10:31:56,763 - INFO - Ciclo finalizado.
+2024-11-29 10:32:12,431 - INFO - Iniciando ciclo para o ativo EURUSD-op com payout 85.0% e direção inicial put.
+2024-11-29 10:32:12,439 - INFO - Iniciando ciclo para o ativo EURUSD-op | Direção inicial: put | Payout: 85.0%
+2024-11-29 10:32:12,440 - INFO - Iniciando ciclo para o ativo EURUSD-op.
+2024-11-29 10:33:00,256 - INFO - Saldo atualizado: R$ 634.88
+2024-11-29 10:33:00,257 - INFO - Saldo atualizado: R$ 634.88
+2024-11-29 10:33:01,489 - INFO - Primeira ordem executada: put | Valor: R$ 2.00
+2024-11-29 10:33:01,489 - INFO - Primeira ordem executada: put | Valor: R$ 2.00
+2024-11-29 10:33:55,987 - INFO - Ciclo interrompido manualmente.
+2024-11-29 10:33:55,988 - WARNING - Ciclo interrompido manualmente.
+2024-11-29 10:33:56,312 - INFO - Saldo atualizado: R$ 632.88
+2024-11-29 10:33:56,312 - INFO - Saldo atualizado: R$ 632.88
+2024-11-29 10:33:56,316 - INFO - Ciclo finalizado.
+2024-11-29 10:33:56,317 - INFO - Ciclo finalizado.
+2024-11-29 10:34:09,249 - INFO - Iniciando ciclo para o ativo EURUSD-op com payout 85.0% e direção inicial put.
+2024-11-29 10:34:09,256 - INFO - Iniciando ciclo para o ativo EURUSD-op | Direção inicial: put | Payout: 85.0%
+2024-11-29 10:34:09,256 - INFO - Iniciando ciclo para o ativo EURUSD-op.
+2024-11-29 10:35:00,249 - INFO - Saldo atualizado: R$ 636.66
+2024-11-29 10:35:00,250 - INFO - Saldo atualizado: R$ 636.66
+2024-11-29 10:35:01,266 - INFO - Primeira ordem executada: put | Valor: R$ 2.00
+2024-11-29 10:35:01,266 - INFO - Primeira ordem executada: put | Valor: R$ 2.00
+2024-11-29 10:36:00,335 - INFO - Saldo atualizado: R$ 634.66
+2024-11-29 10:36:00,335 - INFO - Saldo atualizado: R$ 634.66
+2024-11-29 10:36:01,184 - INFO - Ordem 2 executada: put | Valor: R$ 2.35
+2024-11-29 10:36:01,184 - INFO - Ordem 2 executada: put | Valor: R$ 2.35
+2024-11-29 10:36:57,950 - INFO - Ciclo interrompido manualmente.
+2024-11-29 10:36:57,951 - WARNING - Ciclo interrompido manualmente.
+2024-11-29 10:36:58,290 - INFO - Saldo atualizado: R$ 632.31
+2024-11-29 10:36:58,291 - INFO - Saldo atualizado: R$ 632.31
+2024-11-29 10:36:58,295 - INFO - Ciclo finalizado.
+2024-11-29 10:36:58,296 - INFO - Ciclo finalizado.
+2024-11-29 10:37:25,797 - INFO - Iniciando ciclo para o ativo EURUSD-op com payout 85.0% e direção inicial call.
+2024-11-29 10:37:25,804 - INFO - Iniciando ciclo para o ativo EURUSD-op | Direção inicial: call | Payout: 85.0%
+2024-11-29 10:37:25,805 - INFO - Iniciando ciclo para o ativo EURUSD-op.
+2024-11-29 10:38:00,298 - INFO - Saldo atualizado: R$ 636.76
+2024-11-29 10:38:00,298 - INFO - Saldo atualizado: R$ 636.76
+2024-11-29 10:38:01,545 - INFO - Primeira ordem executada: call | Valor: R$ 2.00
+2024-11-29 10:38:01,545 - INFO - Primeira ordem executada: call | Valor: R$ 2.00
+2024-11-29 10:39:00,278 - INFO - Saldo atualizado: R$ 634.76
+2024-11-29 10:39:00,279 - INFO - Saldo atualizado: R$ 634.76
+2024-11-29 10:39:01,514 - INFO - Ordem 2 executada: put | Valor: R$ 2.35
+2024-11-29 10:39:01,514 - INFO - Ordem 2 executada: put | Valor: R$ 2.35
+2024-11-29 10:39:55,928 - INFO - Ciclo interrompido manualmente.
+2024-11-29 10:39:55,930 - WARNING - Ciclo interrompido manualmente.
+2024-11-29 10:39:56,242 - INFO - Saldo atualizado: R$ 632.41
+2024-11-29 10:39:56,242 - INFO - Saldo atualizado: R$ 632.41
+2024-11-29 10:39:56,247 - INFO - Ciclo finalizado.
+2024-11-29 10:39:56,248 - INFO - Ciclo finalizado.
+2024-11-29 10:40:05,620 - INFO - Iniciando ciclo para o ativo EURUSD-op com payout 85.0% e direção inicial put.
+2024-11-29 10:40:05,627 - INFO - Iniciando ciclo para o ativo EURUSD-op | Direção inicial: put | Payout: 85.0%
+2024-11-29 10:40:05,628 - INFO - Iniciando ciclo para o ativo EURUSD-op.
+2024-11-29 10:41:00,285 - INFO - Saldo atualizado: R$ 636.86
+2024-11-29 10:41:00,285 - INFO - Saldo atualizado: R$ 636.86
+2024-11-29 10:41:01,307 - INFO - Primeira ordem executada: put | Valor: R$ 2.00
+2024-11-29 10:41:01,307 - INFO - Primeira ordem executada: put | Valor: R$ 2.00
+2024-11-29 10:42:00,332 - INFO - Saldo atualizado: R$ 634.86
+2024-11-29 10:42:00,333 - INFO - Saldo atualizado: R$ 634.86
+2024-11-29 10:42:01,164 - INFO - Ordem 2 executada: put | Valor: R$ 2.35
+2024-11-29 10:42:01,164 - INFO - Ordem 2 executada: put | Valor: R$ 2.35
+2024-11-29 10:43:00,286 - INFO - Saldo atualizado: R$ 632.51
+2024-11-29 10:43:00,287 - INFO - Saldo atualizado: R$ 632.51
+2024-11-29 10:43:01,488 - INFO - Ordem 3 executada: call | Valor: R$ 5.12
+2024-11-29 10:43:01,488 - INFO - Ordem 3 executada: call | Valor: R$ 5.12
+2024-11-29 10:44:00,287 - INFO - Saldo atualizado: R$ 627.39
+2024-11-29 10:44:00,287 - INFO - Saldo atualizado: R$ 627.39
+2024-11-29 10:44:01,369 - INFO - Ordem 4 executada: put | Valor: R$ 11.14
+2024-11-29 10:44:01,369 - INFO - Ordem 4 executada: put | Valor: R$ 11.14
+2024-11-29 10:44:57,117 - INFO - Ciclo interrompido manualmente.
+2024-11-29 10:44:57,119 - WARNING - Ciclo interrompido manualmente.
+2024-11-29 10:44:57,392 - INFO - Saldo atualizado: R$ 616.25
+2024-11-29 10:44:57,392 - INFO - Saldo atualizado: R$ 616.25
+2024-11-29 10:44:57,396 - INFO - Ciclo finalizado.
+2024-11-29 10:44:57,397 - INFO - Ciclo finalizado.
+2024-11-29 10:45:11,400 - INFO - Iniciando ciclo para o ativo EURUSD-op com payout 85.0% e direção inicial put.
+2024-11-29 10:45:11,407 - INFO - Iniciando ciclo para o ativo EURUSD-op | Direção inicial: put | Payout: 85.0%
+2024-11-29 10:45:11,408 - INFO - Iniciando ciclo para o ativo EURUSD-op.
+2024-11-29 10:46:00,277 - INFO - Saldo atualizado: R$ 637.34
+2024-11-29 10:46:00,279 - INFO - Saldo atualizado: R$ 637.34
+2024-11-29 10:46:01,479 - INFO - Primeira ordem executada: put | Valor: R$ 2.00
+2024-11-29 10:46:01,479 - INFO - Primeira ordem executada: put | Valor: R$ 2.00
+2024-11-29 10:46:56,155 - INFO - Ciclo interrompido manualmente.
+2024-11-29 10:46:56,156 - WARNING - Ciclo interrompido manualmente.
+2024-11-29 10:46:56,420 - INFO - Saldo atualizado: R$ 635.34
+2024-11-29 10:46:56,420 - INFO - Saldo atualizado: R$ 635.34
+2024-11-29 10:46:56,425 - INFO - Ciclo finalizado.
+2024-11-29 10:46:56,426 - INFO - Ciclo finalizado.
+2024-11-29 10:48:57,531 - INFO - Iniciando ciclo para o ativo EURUSD-op com payout 85.0% e direção inicial put.
+2024-11-29 10:48:57,538 - INFO - Iniciando ciclo para o ativo EURUSD-op | Direção inicial: put | Payout: 85.0%
+2024-11-29 10:48:57,543 - INFO - Iniciando ciclo para o ativo EURUSD-op.
+2024-11-29 10:49:12,873 - INFO - Saldo atualizado: R$ 639.12
+2024-11-29 10:49:12,873 - INFO - Saldo atualizado: R$ 639.12
+2024-11-29 10:49:14,865 - INFO - Primeira ordem executada: put | Valor: R$ 2.00
+2024-11-29 10:49:14,865 - INFO - Primeira ordem executada: put | Valor: R$ 2.00
+2024-11-29 10:50:00,250 - INFO - Saldo atualizado: R$ 637.12
+2024-11-29 10:50:00,251 - INFO - Saldo atualizado: R$ 637.12
+2024-11-29 10:50:01,176 - INFO - Ordem 2 executada: put | Valor: R$ 2.35
+2024-11-29 10:50:01,176 - INFO - Ordem 2 executada: put | Valor: R$ 2.35
+2024-11-29 10:50:57,389 - INFO - Ciclo interrompido manualmente.
+2024-11-29 10:50:57,390 - WARNING - Ciclo interrompido manualmente.
+2024-11-29 10:50:57,667 - INFO - Saldo atualizado: R$ 638.55
+2024-11-29 10:50:57,667 - INFO - Saldo atualizado: R$ 638.55
+2024-11-29 10:50:57,671 - INFO - Ciclo finalizado.
+2024-11-29 10:50:57,672 - INFO - Ciclo finalizado.
+2024-11-29 10:51:07,956 - INFO - Iniciando ciclo para o ativo EURUSD-op com payout 85.0% e direção inicial put.
+2024-11-29 10:51:07,962 - INFO - Iniciando ciclo para o ativo EURUSD-op | Direção inicial: put | Payout: 85.0%
+2024-11-29 10:51:07,962 - INFO - Iniciando ciclo para o ativo EURUSD-op.
+2024-11-29 10:52:00,294 - INFO - Saldo atualizado: R$ 643.00
+2024-11-29 10:52:00,295 - INFO - Saldo atualizado: R$ 643.00
+2024-11-29 10:52:01,310 - INFO - Primeira ordem executada: put | Valor: R$ 2.00
+2024-11-29 10:52:01,310 - INFO - Primeira ordem executada: put | Valor: R$ 2.00
+2024-11-29 10:52:59,849 - INFO - Ciclo interrompido manualmente.
+2024-11-29 10:52:59,851 - WARNING - Ciclo interrompido manualmente.
+2024-11-29 10:53:00,151 - INFO - Saldo atualizado: R$ 641.00
+2024-11-29 10:53:00,151 - INFO - Saldo atualizado: R$ 641.00
+2024-11-29 10:53:00,155 - INFO - Ciclo finalizado.
+2024-11-29 10:53:00,156 - INFO - Ciclo finalizado.
+2024-11-29 10:53:16,103 - INFO - Iniciando ciclo para o ativo EURUSD-op com payout 85.0% e direção inicial put.
+2024-11-29 10:53:16,119 - INFO - Iniciando ciclo para o ativo EURUSD-op | Direção inicial: put | Payout: 85.0%
+2024-11-29 10:53:16,119 - INFO - Iniciando ciclo para o ativo EURUSD-op.
+2024-11-29 10:54:00,325 - INFO - Saldo atualizado: R$ 644.78
+2024-11-29 10:54:00,326 - INFO - Saldo atualizado: R$ 644.78
+2024-11-29 10:54:01,501 - INFO - Primeira ordem executada: put | Valor: R$ 2.00
+2024-11-29 10:54:01,501 - INFO - Primeira ordem executada: put | Valor: R$ 2.00
+2024-11-29 10:55:00,325 - INFO - Saldo atualizado: R$ 642.78
+2024-11-29 10:55:00,326 - INFO - Saldo atualizado: R$ 642.78
+2024-11-29 10:55:01,453 - INFO - Ordem 2 executada: put | Valor: R$ 2.35
+2024-11-29 10:55:01,453 - INFO - Ordem 2 executada: put | Valor: R$ 2.35
+2024-11-29 10:56:00,279 - INFO - Saldo atualizado: R$ 640.43
+2024-11-29 10:56:00,281 - INFO - Saldo atualizado: R$ 640.43
+2024-11-29 10:56:01,375 - INFO - Ordem 3 executada: call | Valor: R$ 5.12
+2024-11-29 10:56:01,375 - INFO - Ordem 3 executada: call | Valor: R$ 5.12
+2024-11-29 10:57:00,334 - INFO - Saldo atualizado: R$ 635.31
+2024-11-29 10:57:00,336 - INFO - Saldo atualizado: R$ 635.31
+2024-11-29 10:57:01,520 - INFO - Ordem 4 executada: put | Valor: R$ 11.14
+2024-11-29 10:57:01,520 - INFO - Ordem 4 executada: put | Valor: R$ 11.14
+2024-11-29 10:58:00,285 - INFO - Saldo atualizado: R$ 624.17
+2024-11-29 10:58:00,286 - INFO - Saldo atualizado: R$ 624.17
+2024-11-29 10:58:01,563 - INFO - Ordem 5 executada: call | Valor: R$ 24.25
+2024-11-29 10:58:01,563 - INFO - Ordem 5 executada: call | Valor: R$ 24.25
+2024-11-29 10:58:58,121 - INFO - Ciclo interrompido manualmente.
+2024-11-29 10:58:58,123 - WARNING - Ciclo interrompido manualmente.
+2024-11-29 10:58:58,375 - INFO - Saldo atualizado: R$ 599.92
+2024-11-29 10:58:58,375 - INFO - Saldo atualizado: R$ 599.92
+2024-11-29 10:58:58,378 - INFO - Ciclo finalizado.
+2024-11-29 10:58:58,379 - INFO - Ciclo finalizado.
+2024-11-29 10:59:08,251 - INFO - Iniciando ciclo para o ativo EURUSD-op com payout 85.0% e direção inicial call.
+2024-11-29 10:59:08,258 - INFO - Iniciando ciclo para o ativo EURUSD-op | Direção inicial: call | Payout: 85.0%
+2024-11-29 10:59:08,259 - INFO - Iniciando ciclo para o ativo EURUSD-op.
+2024-11-29 11:00:00,261 - INFO - Saldo atualizado: R$ 645.84
+2024-11-29 11:00:00,262 - INFO - Saldo atualizado: R$ 645.84
+2024-11-29 11:00:01,348 - INFO - Primeira ordem executada: call | Valor: R$ 2.00
+2024-11-29 11:00:01,349 - INFO - Primeira ordem executada: call | Valor: R$ 2.00
+2024-11-29 11:01:00,252 - INFO - Saldo atualizado: R$ 643.84
+2024-11-29 11:01:00,253 - INFO - Saldo atualizado: R$ 643.84
+2024-11-29 11:01:01,193 - INFO - Ordem 2 executada: put | Valor: R$ 2.35
+2024-11-29 11:01:01,193 - INFO - Ordem 2 executada: put | Valor: R$ 2.35
+2024-11-29 11:02:00,259 - INFO - Saldo atualizado: R$ 641.49
+2024-11-29 11:02:00,260 - INFO - Saldo atualizado: R$ 641.49
+2024-11-29 11:02:01,447 - INFO - Ordem 3 executada: call | Valor: R$ 5.12
+2024-11-29 11:02:01,447 - INFO - Ordem 3 executada: call | Valor: R$ 5.12
+2024-11-29 11:03:00,256 - INFO - Saldo atualizado: R$ 636.37
+2024-11-29 11:03:00,257 - INFO - Saldo atualizado: R$ 636.37
+2024-11-29 11:03:01,406 - INFO - Ordem 4 executada: put | Valor: R$ 11.14
+2024-11-29 11:03:01,406 - INFO - Ordem 4 executada: put | Valor: R$ 11.14
+2024-11-29 11:03:58,975 - INFO - Ciclo interrompido manualmente.
+2024-11-29 11:03:58,977 - WARNING - Ciclo interrompido manualmente.
+2024-11-29 11:03:59,212 - INFO - Saldo atualizado: R$ 625.23
+2024-11-29 11:03:59,212 - INFO - Saldo atualizado: R$ 625.23
+2024-11-29 11:03:59,215 - INFO - Ciclo finalizado.
+2024-11-29 11:03:59,216 - INFO - Ciclo finalizado.
+2024-11-29 11:04:12,540 - INFO - Iniciando ciclo para o ativo EURUSD-op com payout 85.0% e direção inicial put.
+2024-11-29 11:04:12,547 - INFO - Iniciando ciclo para o ativo EURUSD-op | Direção inicial: put | Payout: 85.0%
+2024-11-29 11:04:12,547 - INFO - Iniciando ciclo para o ativo EURUSD-op.
+2024-11-29 11:05:00,267 - INFO - Saldo atualizado: R$ 646.32
+2024-11-29 11:05:00,268 - INFO - Saldo atualizado: R$ 646.32
+2024-11-29 11:05:01,408 - INFO - Primeira ordem executada: put | Valor: R$ 2.00
+2024-11-29 11:05:01,409 - INFO - Primeira ordem executada: put | Valor: R$ 2.00
+2024-11-29 11:05:59,111 - INFO - Ciclo interrompido manualmente.
+2024-11-29 11:05:59,112 - WARNING - Ciclo interrompido manualmente.
+2024-11-29 11:05:59,356 - INFO - Saldo atualizado: R$ 644.32
+2024-11-29 11:05:59,356 - INFO - Saldo atualizado: R$ 644.32
+2024-11-29 11:05:59,360 - INFO - Ciclo finalizado.
+2024-11-29 11:05:59,361 - INFO - Ciclo finalizado.
+2024-11-29 11:06:08,929 - INFO - Iniciando ciclo para o ativo EURUSD-op com payout 85.0% e direção inicial put.
+2024-11-29 11:06:08,935 - INFO - Iniciando ciclo para o ativo EURUSD-op | Direção inicial: put | Payout: 85.0%
+2024-11-29 11:06:08,935 - INFO - Iniciando ciclo para o ativo EURUSD-op.
+2024-11-29 11:07:00,280 - INFO - Saldo atualizado: R$ 648.10
+2024-11-29 11:07:00,280 - INFO - Saldo atualizado: R$ 648.10
+2024-11-29 11:07:01,520 - INFO - Primeira ordem executada: put | Valor: R$ 2.00
+2024-11-29 11:07:01,520 - INFO - Primeira ordem executada: put | Valor: R$ 2.00
+2024-11-29 11:07:54,642 - INFO - Ciclo interrompido manualmente.
+2024-11-29 11:07:54,643 - WARNING - Ciclo interrompido manualmente.
+2024-11-29 11:07:54,970 - INFO - Saldo atualizado: R$ 646.10
+2024-11-29 11:07:54,970 - INFO - Saldo atualizado: R$ 646.10
+2024-11-29 11:07:54,974 - INFO - Ciclo finalizado.
+2024-11-29 11:07:54,975 - INFO - Ciclo finalizado.
+2024-11-29 11:09:18,149 - INFO - Iniciando ciclo para o ativo EURUSD-op com payout 85.0% e direção inicial put.
+2024-11-29 11:09:18,156 - INFO - Iniciando ciclo para o ativo EURUSD-op | Direção inicial: put | Payout: 85.0%
+2024-11-29 11:09:18,157 - INFO - Iniciando ciclo para o ativo EURUSD-op.
+2024-11-29 11:10:00,324 - INFO - Saldo atualizado: R$ 649.88
+2024-11-29 11:10:00,325 - INFO - Saldo atualizado: R$ 649.88
+2024-11-29 11:10:01,711 - INFO - Primeira ordem executada: put | Valor: R$ 2.00
+2024-11-29 11:10:01,712 - INFO - Primeira ordem executada: put | Valor: R$ 2.00
+2024-11-29 11:10:57,973 - INFO - Ciclo interrompido manualmente.
+2024-11-29 11:10:57,975 - WARNING - Ciclo interrompido manualmente.
+2024-11-29 11:10:58,237 - INFO - Saldo atualizado: R$ 647.88
+2024-11-29 11:10:58,237 - INFO - Saldo atualizado: R$ 647.88
+2024-11-29 11:10:58,241 - INFO - Ciclo finalizado.
+2024-11-29 11:10:58,246 - INFO - Ciclo finalizado.
+2024-11-29 11:18:57,171 - INFO - Iniciando ciclo para o ativo EURUSD-op com payout 85.0% e direção inicial call.
+2024-11-29 11:18:57,178 - INFO - Iniciando ciclo para o ativo EURUSD-op | Direção inicial: call | Payout: 85.0%
+2024-11-29 11:18:57,179 - INFO - Iniciando ciclo para o ativo EURUSD-op.
+2024-11-29 11:19:00,322 - INFO - Saldo atualizado: R$ 651.66
+2024-11-29 11:19:00,322 - INFO - Saldo atualizado: R$ 651.66
+2024-11-29 11:19:01,437 - INFO - Primeira ordem executada: call | Valor: R$ 2.00
+2024-11-29 11:19:01,437 - INFO - Primeira ordem executada: call | Valor: R$ 2.00
+2024-11-29 11:20:00,287 - INFO - Saldo atualizado: R$ 649.66
+2024-11-29 11:20:00,288 - INFO - Saldo atualizado: R$ 649.66
+2024-11-29 11:20:01,449 - INFO - Ordem 2 executada: put | Valor: R$ 2.35
+2024-11-29 11:20:01,449 - INFO - Ordem 2 executada: put | Valor: R$ 2.35
+2024-11-29 11:21:00,340 - INFO - Saldo atualizado: R$ 647.31
+2024-11-29 11:21:00,341 - INFO - Saldo atualizado: R$ 647.31
+2024-11-29 11:21:01,373 - INFO - Ordem 3 executada: call | Valor: R$ 5.12
+2024-11-29 11:21:01,373 - INFO - Ordem 3 executada: call | Valor: R$ 5.12
+2024-11-29 11:21:57,370 - INFO - Ciclo interrompido manualmente.
+2024-11-29 11:21:57,371 - WARNING - Ciclo interrompido manualmente.
+2024-11-29 11:21:57,653 - INFO - Saldo atualizado: R$ 642.19
+2024-11-29 11:21:57,653 - INFO - Saldo atualizado: R$ 642.19
+2024-11-29 11:21:57,657 - INFO - Ciclo finalizado.
+2024-11-29 11:21:57,658 - INFO - Ciclo finalizado.

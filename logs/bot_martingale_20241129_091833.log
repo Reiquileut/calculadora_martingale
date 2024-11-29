@@ -1,0 +1,39 @@
+2024-11-29 09:18:35,713 - INFO - Conexão bem-sucedida!
+2024-11-29 09:18:35,725 - ERROR - Exceção durante conexão: Traceback (most recent call last):
+  File "/Users/thiagosotero/Documents/calculadora_martingale/bot-gui.py", line 208, in conectar
+    status, reason = self.api.conectar()
+                     ^^^^^^^^^^^^^^^^^^^
+  File "/Users/thiagosotero/Documents/calculadora_martingale/bot-gui.py", line 27, in conectar
+    status, reason = self.iq.connect()
+                     ^^^^^^^^^^^^^^^^^
+  File "/opt/anaconda3/lib/python3.12/site-packages/iqoptionapi/stable_api.py", line 103, in connect
+    check, reason = self.api.connect()
+                    ^^^^^^^^^^^^^^^^^^
+  File "/opt/anaconda3/lib/python3.12/site-packages/iqoptionapi/api.py", line 850, in connect
+    check_ssid = self.send_ssid()
+                 ^^^^^^^^^^^^^^^^
+  File "/opt/anaconda3/lib/python3.12/site-packages/iqoptionapi/api.py", line 825, in send_ssid
+    self.ssid(global_value.SSID)  # pylint: disable=not-callable
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/anaconda3/lib/python3.12/site-packages/iqoptionapi/ws/chanels/ssid.py", line 17, in __call__
+    self.send_websocket_request(self.name, ssid)
+  File "/opt/anaconda3/lib/python3.12/site-packages/iqoptionapi/ws/chanels/base.py", line 25, in send_websocket_request
+    return self.api.send_websocket_request(name, msg,request_id)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/anaconda3/lib/python3.12/site-packages/iqoptionapi/api.py", line 277, in send_websocket_request
+    self.websocket.send(data)
+  File "/opt/anaconda3/lib/python3.12/site-packages/websocket/_app.py", line 154, in send
+    raise WebSocketConnectionClosedException(
+websocket._exceptions.WebSocketConnectionClosedException: Connection is already closed.
+
+2024-11-29 09:18:35,736 - INFO - Conexão bem-sucedida!
+2024-11-29 09:18:35,742 - INFO - Conexão bem-sucedida!
+2024-11-29 09:18:36,045 - INFO - Saldo atualizado: R$ 612.46
+2024-11-29 09:18:36,046 - INFO - Saldo atualizado: R$ 612.46
+2024-11-29 09:18:36,060 - INFO - Saldo atualizado: R$ 612.46
+2024-11-29 09:18:36,060 - INFO - Saldo atualizado: R$ 612.46
+2024-11-29 09:18:36,071 - INFO - Saldo atualizado: R$ 612.46
+2024-11-29 09:18:36,083 - INFO - Saldo atualizado: R$ 612.46
+2024-11-29 09:18:36,266 - INFO - Usuário conectado com sucesso.
+2024-11-29 09:18:36,278 - INFO - Usuário conectado com sucesso.
+2024-11-29 09:18:36,295 - INFO - Usuário conectado com sucesso.

@@ -1,0 +1,40 @@
+2024-11-29 09:18:10,979 - INFO - Conexão bem-sucedida!
+2024-11-29 09:18:11,225 - INFO - Exceção durante conexão: socket is already closed.
+2024-11-29 09:18:14,865 - ERROR - Exceção durante conexão: Traceback (most recent call last):
+  File "/Users/thiagosotero/Documents/calculadora_martingale/bot-gui.py", line 214, in conectar
+    saldo = self.obter_saldo_disponivel()
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/thiagosotero/Documents/calculadora_martingale/bot-gui.py", line 319, in obter_saldo_disponivel
+    saldo = self.api.obter_saldo()
+            ^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/thiagosotero/Documents/calculadora_martingale/bot-gui.py", line 36, in obter_saldo
+    return self.iq.get_balance()
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/anaconda3/lib/python3.12/site-packages/iqoptionapi/stable_api.py", line 426, in get_balance
+    balances_raw = self.get_balances()
+                   ^^^^^^^^^^^^^^^^^^^
+  File "/opt/anaconda3/lib/python3.12/site-packages/iqoptionapi/stable_api.py", line 433, in get_balances
+    self.api.get_balances()
+  File "/opt/anaconda3/lib/python3.12/site-packages/iqoptionapi/ws/chanels/get_balances.py", line 17, in __call__
+    self.send_websocket_request(self.name, data)
+  File "/opt/anaconda3/lib/python3.12/site-packages/iqoptionapi/ws/chanels/base.py", line 25, in send_websocket_request
+    return self.api.send_websocket_request(name, msg,request_id)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/anaconda3/lib/python3.12/site-packages/iqoptionapi/api.py", line 277, in send_websocket_request
+    self.websocket.send(data)
+  File "/opt/anaconda3/lib/python3.12/site-packages/websocket/_app.py", line 153, in send
+    if not self.sock or self.sock.send(data, opcode) == 0:
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/anaconda3/lib/python3.12/site-packages/websocket/_core.py", line 253, in send
+    return self.send_frame(frame)
+           ^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/anaconda3/lib/python3.12/site-packages/websocket/_core.py", line 278, in send_frame
+    l = self._send(data)
+        ^^^^^^^^^^^^^^^^
+  File "/opt/anaconda3/lib/python3.12/site-packages/websocket/_core.py", line 448, in _send
+    return send(self.sock, data)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/anaconda3/lib/python3.12/site-packages/websocket/_socket.py", line 135, in send
+    raise WebSocketConnectionClosedException("socket is already closed.")
+websocket._exceptions.WebSocketConnectionClosedException: socket is already closed.
+

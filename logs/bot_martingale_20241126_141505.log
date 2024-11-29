@@ -1,0 +1,64 @@
+2024-11-26 14:15:05,741 - INFO - Conexão bem-sucedida!
+2024-11-26 14:15:06,003 - INFO - Saldo atualizado: R$ 10050.47
+2024-11-26 14:15:06,003 - INFO - Saldo atualizado: R$ 10050.47
+2024-11-26 14:15:06,006 - INFO - Usuário conectado com sucesso.
+2024-11-26 14:15:18,096 - INFO - Iniciando ciclo para o ativo EURUSD-op com payout 85.0% e direção inicial call.
+2024-11-26 14:15:18,097 - INFO - Iniciando ciclo para o ativo EURUSD-op | Direção inicial: call | Payout: 85.0%
+2024-11-26 14:15:18,101 - INFO - Iniciando ciclo para o ativo EURUSD-op.
+2024-11-26 14:16:00,293 - INFO - Saldo atualizado: R$ 10050.47
+2024-11-26 14:16:00,293 - INFO - Saldo atualizado: R$ 10050.47
+2024-11-26 14:16:01,407 - INFO - Ordem 1 executada: put | Valor: R$ 16.47
+2024-11-26 14:16:01,408 - INFO - Ordem 1 executada: put | Valor: R$ 16.47
+2024-11-26 14:16:01,411 - INFO - Solicitando candles para o ativo EURUSD-op com timestamp 1732641301.
+2024-11-26 14:16:01,412 - INFO - Solicitando candles para o ativo EURUSD-op com timestamp 1732641301.
+2024-11-26 14:16:01,412 - INFO - Exceção ao obter candles para EURUSD-op: 'IQ_Option' object has no attribute 'get_server_time'
+2024-11-26 14:16:01,412 - INFO - Exceção ao obter candles para EURUSD-op: 'IQ_Option' object has no attribute 'get_server_time'
+2024-11-26 14:16:01,417 - ERROR - Exceção ao obter candles para EURUSD-op: Traceback (most recent call last):
+  File "/Users/thiagosotero/Documents/calculadora_martingale/bot-gui.py", line 71, in obter_preco_ativo
+    server_time = self.iq.get_server_time()
+                  ^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'IQ_Option' object has no attribute 'get_server_time'. Did you mean: 'get_server_timestamp'?
+
+2024-11-26 14:16:01,417 - INFO - Erro ao obter o preço de abertura da ordem.
+2024-11-26 14:16:01,417 - ERROR - Erro ao obter o preço de abertura da ordem.
+2024-11-26 14:17:00,343 - INFO - Saldo atualizado: R$ 10065.19
+2024-11-26 14:17:00,345 - INFO - Saldo atualizado: R$ 10065.19
+2024-11-26 14:17:01,386 - INFO - Ordem 2 executada: call | Valor: R$ 35.85
+2024-11-26 14:17:01,386 - INFO - Ordem 2 executada: call | Valor: R$ 35.85
+2024-11-26 14:17:01,386 - INFO - Solicitando candles para o ativo EURUSD-op com timestamp 1732641361.
+2024-11-26 14:17:01,386 - INFO - Solicitando candles para o ativo EURUSD-op com timestamp 1732641361.
+2024-11-26 14:17:01,390 - INFO - Exceção ao obter candles para EURUSD-op: 'IQ_Option' object has no attribute 'get_server_time'
+2024-11-26 14:17:01,390 - INFO - Exceção ao obter candles para EURUSD-op: 'IQ_Option' object has no attribute 'get_server_time'
+2024-11-26 14:17:01,396 - ERROR - Exceção ao obter candles para EURUSD-op: Traceback (most recent call last):
+  File "/Users/thiagosotero/Documents/calculadora_martingale/bot-gui.py", line 71, in obter_preco_ativo
+    server_time = self.iq.get_server_time()
+                  ^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'IQ_Option' object has no attribute 'get_server_time'. Did you mean: 'get_server_timestamp'?
+
+2024-11-26 14:17:01,396 - INFO - Erro ao obter o preço de abertura da ordem.
+2024-11-26 14:17:01,396 - ERROR - Erro ao obter o preço de abertura da ordem.
+2024-11-26 14:17:59,346 - INFO - Ciclo interrompido manualmente.
+2024-11-26 14:17:59,347 - WARNING - Ciclo interrompido manualmente.
+2024-11-26 14:17:59,596 - INFO - Saldo atualizado: R$ 10029.34
+2024-11-26 14:17:59,596 - INFO - Saldo atualizado: R$ 10029.34
+2024-11-26 14:17:59,599 - INFO - Ciclo finalizado.
+2024-11-26 14:17:59,599 - INFO - Ciclo finalizado.
+2024-11-26 14:18:11,981 - INFO - Iniciando ciclo para o ativo EURUSD-op com payout 85.0% e direção inicial call.
+2024-11-26 14:18:11,983 - INFO - Iniciando ciclo para o ativo EURUSD-op | Direção inicial: call | Payout: 85.0%
+2024-11-26 14:18:11,987 - INFO - Iniciando ciclo para o ativo EURUSD-op.
+2024-11-26 14:19:00,290 - INFO - Saldo atualizado: R$ 10097.24
+2024-11-26 14:19:00,291 - INFO - Saldo atualizado: R$ 10097.24
+2024-11-26 14:19:01,482 - INFO - Ordem 1 executada: put | Valor: R$ 14.12
+2024-11-26 14:19:01,482 - INFO - Ordem 1 executada: put | Valor: R$ 14.12
+2024-11-26 14:19:01,482 - INFO - Solicitando candles para o ativo EURUSD-op com timestamp 1732641481.
+2024-11-26 14:19:01,482 - INFO - Solicitando candles para o ativo EURUSD-op com timestamp 1732641481.
+2024-11-26 14:19:01,486 - INFO - Exceção ao obter candles para EURUSD-op: 'IQ_Option' object has no attribute 'get_server_time'
+2024-11-26 14:19:01,486 - INFO - Exceção ao obter candles para EURUSD-op: 'IQ_Option' object has no attribute 'get_server_time'
+2024-11-26 14:19:01,491 - ERROR - Exceção ao obter candles para EURUSD-op: Traceback (most recent call last):
+  File "/Users/thiagosotero/Documents/calculadora_martingale/bot-gui.py", line 71, in obter_preco_ativo
+    server_time = self.iq.get_server_time()
+                  ^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'IQ_Option' object has no attribute 'get_server_time'. Did you mean: 'get_server_timestamp'?
+
+2024-11-26 14:19:01,492 - INFO - Erro ao obter o preço de abertura da ordem.
+2024-11-26 14:19:01,492 - ERROR - Erro ao obter o preço de abertura da ordem.

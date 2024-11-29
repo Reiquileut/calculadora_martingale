@@ -67,7 +67,7 @@ class BotMartingaleApp:
         """Configura os elementos da interface gráfica."""
         # Estilos personalizados
         self.style = ttk.Style()
-        self.style.theme_use('clam')  # Você pode testar outros temas: 'default', 'alt', 'clam', 'vista', 'xpnative'
+        self.style.theme_use('clam')
         self.style.configure('TButton', font=('Helvetica', 10))
         self.style.configure('TLabel', font=('Helvetica', 10))
         self.style.configure('TEntry', font=('Helvetica', 10))
@@ -82,16 +82,7 @@ class BotMartingaleApp:
         self.main_frame.columnconfigure(0, weight=1)
         self.main_frame.columnconfigure(1, weight=1)
         self.main_frame.columnconfigure(2, weight=1)
-        self.main_frame.rowconfigure(0, weight=0)
-        self.main_frame.rowconfigure(1, weight=0)
-        self.main_frame.rowconfigure(2, weight=0)
-        self.main_frame.rowconfigure(3, weight=0)
-        self.main_frame.rowconfigure(4, weight=0)
-        self.main_frame.rowconfigure(5, weight=0)
-        self.main_frame.rowconfigure(6, weight=0)
-        self.main_frame.rowconfigure(7, weight=0)
-        self.main_frame.rowconfigure(8, weight=1)  # Área de logs expande
-        self.main_frame.rowconfigure(9, weight=0)
+        self.main_frame.rowconfigure(5, weight=1)  # Área de logs expande
 
         # Campos de Login
         login_frame = ttk.LabelFrame(self.main_frame, text="Login", padding=(10, 10))
@@ -106,7 +97,8 @@ class BotMartingaleApp:
         self.entry_senha = ttk.Entry(login_frame, show="*")
         self.entry_senha.grid(row=1, column=1, sticky="we")
 
-        ttk.Button(login_frame, text="Login", command=self.fazer_login).grid(row=0, column=2, rowspan=2, padx=(10, 0))
+        self.button_login = ttk.Button(login_frame, text="Login", command=self.fazer_login)
+        self.button_login.grid(row=0, column=2, rowspan=2, padx=(10, 0))
 
         # Separador
         ttk.Separator(self.main_frame, orient='horizontal').grid(row=1, column=0, columnspan=3, sticky="we", pady=10)
@@ -199,6 +191,10 @@ class BotMartingaleApp:
             return
 
         self.atualizar_status("Conectando...", "blue")
+        # Desabilitar campos de login e botão
+        self.entry_email.config(state=tk.DISABLED)
+        self.entry_senha.config(state=tk.DISABLED)
+        self.button_login.config(state=tk.DISABLED)
         threading.Thread(target=self.conectar, args=(email, senha)).start()
 
     def conectar(self, email, senha):
@@ -223,14 +219,19 @@ class BotMartingaleApp:
                 self.api = None
                 self.atualizar_status("Erro ao conectar.", "red")
                 self.log_mensagem(f"Falha na conexão: {reason}")
-                messagebox.showerror("Erro de Login", f"Falha na conexão: {reason}")
+                self.root.after(0, lambda: messagebox.showerror("Erro de Login", f"Falha na conexão: {reason}"))
                 logger.error(f"Falha na conexão: {reason}")
         except Exception as e:
             self.api = None
             self.atualizar_status("Erro ao conectar.", "red")
             self.log_mensagem(f"Exceção durante conexão: {e}")
-            messagebox.showerror("Erro de Login", f"Exceção durante conexão: {e}")
+            self.root.after(0, lambda: messagebox.showerror("Erro de Login", f"Exceção durante conexão: {e}"))
             logger.error(f"Exceção durante conexão: {traceback.format_exc()}")
+        finally:
+            # Reabilitar campos de login e botão
+            self.root.after(0, lambda: self.entry_email.config(state=tk.NORMAL))
+            self.root.after(0, lambda: self.entry_senha.config(state=tk.NORMAL))
+            self.root.after(0, lambda: self.button_login.config(state=tk.NORMAL))
 
     def setup_logging_session(self):
         """Configura o logging para uma nova sessão."""
@@ -351,6 +352,9 @@ class BotMartingaleApp:
         """Executa as operações conforme a sequência calculada."""
         self.CICLO_ATIVO = True
         self.root.after(0, lambda: self.button_encerrar.config(state=tk.NORMAL))
+        self.root.after(0, lambda: self.button_iniciar.config(state=tk.DISABLED))
+        self.root.after(0, lambda: self.radio_demo.config(state=tk.DISABLED))
+        self.root.after(0, lambda: self.radio_real.config(state=tk.DISABLED))
 
         try:
             sequencia, acoes = calcular_martingale(valor_inicial, payout, direcao_inicial)
@@ -367,8 +371,8 @@ class BotMartingaleApp:
         self.atualizar_status("Executando ciclo...", "blue")
         logger.info(f"Iniciando ciclo para o ativo {ativo}.")
 
-        # Mostrar mensagem de confirmação
-        messagebox.showinfo("Ciclo Iniciado", f"O ciclo para o ativo {ativo} foi iniciado.")
+        # Mostrar mensagem de confirmação na thread principal
+        self.root.after(0, lambda: messagebox.showinfo("Ciclo Iniciado", f"O ciclo para o ativo {ativo} foi iniciado."))
 
         try:
             self.sincronizar_com_candle()
@@ -437,16 +441,17 @@ class BotMartingaleApp:
             self.log_mensagem(f"Erro inesperado durante o ciclo: {e}")
             self.atualizar_status("Erro inesperado durante o ciclo.", "red")
             logger.error(f"Erro inesperado durante o ciclo: {traceback.format_exc()}")
-            raise  # Re-lançar exceção para facilitar a depuração
         finally:
             self.log_mensagem("Ciclo finalizado.")
             self.atualizar_status("Ciclo finalizado.", "green")
             self.CICLO_ATIVO = False
             self.root.after(0, lambda: self.button_iniciar.config(state=tk.NORMAL))
             self.root.after(0, lambda: self.button_encerrar.config(state=tk.DISABLED))
+            self.root.after(0, lambda: self.radio_demo.config(state=tk.NORMAL))
+            self.root.after(0, lambda: self.radio_real.config(state=tk.NORMAL))
             logger.info("Ciclo finalizado.")
-            # Mostrar mensagem ao finalizar ciclo
-            messagebox.showinfo("Ciclo Finalizado", "O ciclo de negociação foi finalizado.")
+            # Mostrar mensagem ao finalizar ciclo na thread principal
+            self.root.after(0, lambda: messagebox.showinfo("Ciclo Finalizado", "O ciclo de negociação foi finalizado."))
 
     def iniciar_ciclo(self):
         """Inicia o ciclo de negociação."""
@@ -491,6 +496,12 @@ class BotMartingaleApp:
         self.log_mensagem(f"Iniciando ciclo para o ativo {ativo} com payout {payout}% e direção inicial {direcao}.")
         self.atualizar_status("Preparando para executar ciclo...", "blue")
 
+        # Desabilitar botões antes de iniciar o ciclo
+        self.button_iniciar.config(state=tk.DISABLED)
+        self.button_encerrar.config(state=tk.DISABLED)  # Será habilitado no início do ciclo
+        self.radio_demo.config(state=tk.DISABLED)
+        self.radio_real.config(state=tk.DISABLED)
+
         # Inicia o ciclo em uma nova thread
         threading.Thread(target=self.executar_ciclo, args=(ativo, payout, direcao, valor_inicial)).start()
 
@@ -507,6 +518,8 @@ class BotMartingaleApp:
             self.atualizar_status("Ciclo interrompido.", "red")
             self.button_iniciar.config(state=tk.NORMAL)
             self.button_encerrar.config(state=tk.DISABLED)
+            self.radio_demo.config(state=tk.NORMAL)
+            self.radio_real.config(state=tk.NORMAL)
             logger.warning("Ciclo interrompido manualmente.")
 
 if __name__ == "__main__":
