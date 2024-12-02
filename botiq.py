@@ -3,7 +3,7 @@ import time
 
 # Configurações
 EMAIL = "thiagosoteroprado@gmail.com"
-SENHA = "thiago.thi"
+SENHA = "p&%bQDV8eXkjJ6eW"
 ATIVO = "EURUSD-op"
 VALOR = 1  # Valor da operaçãoåç
 DIRECAO = "call"  # ou "put"

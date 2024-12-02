@@ -1,0 +1,13 @@
+2024-12-02 09:50:03,941 - INFO - Conexão bem-sucedida!
+2024-12-02 09:50:04,238 - INFO - Saldo atualizado: R$ 10101.20
+2024-12-02 09:50:04,238 - INFO - Saldo atualizado: R$ 10101.20
+2024-12-02 09:50:04,242 - INFO - Usuário conectado com sucesso.
+2024-12-02 09:50:09,422 - INFO - Enviando ordem: CALL | Ativo: EURUSD-op | Valor: R$ 2.00 | Payout: 85.0%
+2024-12-02 09:50:14,684 - ERROR - Falha ao executar ordem digital no ativo EURUSD-op.
+2024-12-02 09:50:14,684 - INFO - Falha ao enviar ordem para EURUSD-op.
+2024-12-02 09:50:33,306 - INFO - Enviando ordem: CALL | Ativo: EURUSD-op | Valor: R$ 2.00 | Payout: 85.0%
+2024-12-02 09:50:38,566 - ERROR - Falha ao executar ordem digital no ativo EURUSD-op.
+2024-12-02 09:50:38,566 - INFO - Falha ao enviar ordem para EURUSD-op.
+2024-12-02 09:50:58,314 - INFO - Enviando ordem: CALL | Ativo: EURUSD-op | Valor: R$ 2.00 | Payout: 85.0%
+2024-12-02 09:51:03,581 - ERROR - Falha ao executar ordem digital no ativo EURUSD-op.
+2024-12-02 09:51:03,582 - INFO - Falha ao enviar ordem para EURUSD-op.

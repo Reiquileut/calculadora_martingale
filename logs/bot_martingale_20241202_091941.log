@@ -1,0 +1,13 @@
+2024-12-02 09:19:41,592 - INFO - Conexão bem-sucedida!
+2024-12-02 09:19:41,858 - INFO - Saldo atualizado: R$ 10101.20
+2024-12-02 09:19:41,858 - INFO - Saldo atualizado: R$ 10101.20
+2024-12-02 09:19:41,863 - INFO - Usuário conectado com sucesso.
+2024-12-02 09:24:08,821 - INFO - Iniciando ciclo para o ativo EURUSD-op com payout 85.0% e direção inicial call.
+2024-12-02 09:24:08,831 - INFO - Iniciando ciclo para o ativo EURUSD-op | Direção inicial: call | Payout: 85.0%
+2024-12-02 09:24:08,831 - INFO - Iniciando ciclo para o ativo EURUSD-op.
+2024-12-02 09:25:00,315 - INFO - Saldo atualizado: R$ 10101.20
+2024-12-02 09:25:00,315 - INFO - Saldo atualizado: R$ 10101.20
+2024-12-02 09:25:05,770 - INFO - Erro ao executar a primeira ordem de valor R$ 2.00. Encerrando ciclo.
+2024-12-02 09:25:05,771 - ERROR - Erro na execução da primeira ordem.
+2024-12-02 09:25:05,771 - INFO - Ciclo finalizado.
+2024-12-02 09:25:05,789 - INFO - Ciclo finalizado.
