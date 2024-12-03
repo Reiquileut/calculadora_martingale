@@ -219,13 +219,13 @@ class BotMartingaleApp:
                 self.api = None
                 self.atualizar_status("Erro ao conectar.", "red")
                 self.log_mensagem(f"Falha na conexão: {reason}")
-                self.root.after(0, lambda: messagebox.showerror("Erro de Login", f"Falha na conexão: {reason}"))
+                self.mostrar_messagebox("Erro de Login", f"Falha na conexão: {reason}")
                 logger.error(f"Falha na conexão: {reason}")
         except Exception as e:
             self.api = None
             self.atualizar_status("Erro ao conectar.", "red")
             self.log_mensagem(f"Exceção durante conexão: {e}")
-            self.root.after(0, lambda: messagebox.showerror("Erro de Login", f"Exceção durante conexão: {e}"))
+            self.mostrar_messagebox("Erro de Login", f"Exceção durante conexão: {e}")
             logger.error(f"Exceção durante conexão: {traceback.format_exc()}")
         finally:
             # Reabilitar campos de login e botão
@@ -348,6 +348,10 @@ class BotMartingaleApp:
             self.label_conta.config(text=tipo)
         self.root.after(0, _atualizar)
 
+    def mostrar_messagebox(self, titulo, mensagem):
+        """Mostra uma messagebox na thread principal."""
+        self.root.after(0, lambda: messagebox.showinfo(titulo, mensagem))
+
     def executar_ciclo(self, ativo, payout, direcao_inicial, valor_inicial):
         """Executa as operações conforme a sequência calculada."""
         self.CICLO_ATIVO = True
@@ -372,7 +376,7 @@ class BotMartingaleApp:
         logger.info(f"Iniciando ciclo para o ativo {ativo}.")
 
         # Mostrar mensagem de confirmação na thread principal
-        self.root.after(0, lambda: messagebox.showinfo("Ciclo Iniciado", f"O ciclo para o ativo {ativo} foi iniciado."))
+        self.mostrar_messagebox("Ciclo Iniciado", f"O ciclo para o ativo {ativo} foi iniciado.")
 
         try:
             self.sincronizar_com_candle()
@@ -451,7 +455,7 @@ class BotMartingaleApp:
             self.root.after(0, lambda: self.radio_real.config(state=tk.NORMAL))
             logger.info("Ciclo finalizado.")
             # Mostrar mensagem ao finalizar ciclo na thread principal
-            self.root.after(0, lambda: messagebox.showinfo("Ciclo Finalizado", "O ciclo de negociação foi finalizado."))
+            self.mostrar_messagebox("Ciclo Finalizado", "O ciclo de negociação foi finalizado.")
 
     def iniciar_ciclo(self):
         """Inicia o ciclo de negociação."""
