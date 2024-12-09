@@ -375,6 +375,14 @@ class BotMartingaleApp:
         self.atualizar_status("Executando ciclo...", "blue")
         logger.info(f"Iniciando ciclo para o ativo {ativo}.")
 
+        # Logando toda a sequência calculada antes de iniciar
+        self.log_mensagem("Sequência de entradas calculada:")
+        primeira_acao = "Compra" if direcao_inicial == "call" else "Venda"
+        self.log_mensagem(f"Entrada 1: {primeira_acao} - Valor: R$ {valor_inicial:.2f}")
+        for i, (acao, val) in enumerate(zip(acoes, sequencia), start=2):
+            tipo_operacao = "Compra" if acao == "C" else "Venda"
+            self.log_mensagem(f"Entrada {i}: {tipo_operacao} - Valor: R$ {val:.2f}")
+
         # Mostrar mensagem de confirmação na thread principal
         self.mostrar_messagebox("Ciclo Iniciado", f"O ciclo para o ativo {ativo} foi iniciado.")
 
