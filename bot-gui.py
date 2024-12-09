@@ -354,6 +354,17 @@ class BotMartingaleApp:
 
     def executar_ciclo(self, ativo, payout, direcao_inicial, valor_inicial):
         """Executa as operações conforme a sequência calculada."""
+
+        # Primeiro, verificar se o ativo está disponível (na thread separada)
+        if not self.verificar_ativo(ativo):
+            self.log_mensagem(f"O ativo '{ativo}' não está disponível para operações no momento.")
+            self.atualizar_status("Ativo indisponível.", "red")
+            self.root.after(0, lambda: self.button_iniciar.config(state=tk.NORMAL))
+            self.root.after(0, lambda: self.button_encerrar.config(state=tk.DISABLED))
+            self.root.after(0, lambda: self.radio_demo.config(state=tk.NORMAL))
+            self.root.after(0, lambda: self.radio_real.config(state=tk.NORMAL))
+            return
+
         self.CICLO_ATIVO = True
         self.root.after(0, lambda: self.button_encerrar.config(state=tk.NORMAL))
         self.root.after(0, lambda: self.button_iniciar.config(state=tk.DISABLED))
@@ -501,9 +512,7 @@ class BotMartingaleApp:
             messagebox.showerror("Erro", "Selecione uma direção válida (Compra ou Venda).")
             return
 
-        if not self.verificar_ativo(ativo):
-            messagebox.showerror("Erro", f"O ativo '{ativo}' não está disponível para operações no momento.")
-            return
+        # NÃO VERIFICAR O ATIVO AQUI, SERÁ VERIFICADO NA THREAD DO EXECUTAR_CICLO
 
         self.log_mensagem(f"Iniciando ciclo para o ativo {ativo} com payout {payout}% e direção inicial {direcao}.")
         self.atualizar_status("Preparando para executar ciclo...", "blue")
@@ -514,7 +523,7 @@ class BotMartingaleApp:
         self.radio_demo.config(state=tk.DISABLED)
         self.radio_real.config(state=tk.DISABLED)
 
-        # Inicia o ciclo em uma nova thread
+        # Inicia o ciclo em uma nova thread (inclusive a verificação do ativo)
         threading.Thread(target=self.executar_ciclo, args=(ativo, payout, direcao, valor_inicial)).start()
 
     def encerrar_ciclo(self):
